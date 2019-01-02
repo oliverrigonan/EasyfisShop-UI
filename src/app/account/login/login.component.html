@@ -11,22 +11,24 @@
               Sign in to continue to application.
             </div>
             <br />
-            <form>
+            <form (ngSubmit)="login()">
               <div class="form-group">
                 <label for="inpUsername">Username </label>
-                <input type="text" class="form-control" id="inpUsername" placeholder="Enter Username" required>
+                <input type="text" class="form-control" id="inpUsername" [(ngModel)]="loginModel.UserName"
+                  [ngModelOptions]="{standalone: true}" placeholder="Enter Username" required />
               </div>
               <div class="form-group">
                 <label for="inpPassword">Password </label>
-                <input type="password" class="form-control" id="inpPassword" placeholder="Enter Password" required>
+                <input type="password" class="form-control" id="inpPassword" [(ngModel)]="loginModel.Password"
+                  [ngModelOptions]="{standalone: true}" placeholder="Enter Password" required />
               </div>
               <br />
-              <button type="submit" class="btn btn-primary btn-lg btn-block" routerLink="/software">Sign in</button>
+              <input type="submit" class="btn btn-primary btn-lg btn-block" id="btnLogin" value="Sign in" />
               <br />
               <br />
               <div class="text-center">
                 <small>
-                  <b>Easyfis Online Shop Integrator</b> 
+                  <b>Easyfis Online Shop Integrator</b>
                   <br />
                   V.20180102.1132.NOR
                 </small>
