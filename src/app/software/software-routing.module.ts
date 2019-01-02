@@ -13,6 +13,7 @@ const routes: Routes = [
   {
     path: '', component: SysSoftwareLayoutComponent, children: [
       { path: '', component: SysDashboardComponent },
+      { path: 'sys-main-menu', component: SysDashboardComponent },
       { path: 'mst-shop-order-status', component: MstShopOrderStatusComponent },
       { path: 'mst-shop-group', component: MstShopGroupComponent },
       { path: 'trn-shop-order-list', component: TrnShopOrderListComponent },

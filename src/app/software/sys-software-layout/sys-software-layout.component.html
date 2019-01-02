@@ -1,3 +1,64 @@
-<p>Software Header</p>
-<router-outlet></router-outlet>
-<p>Software Footer</p>
+<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">
+        <img src="../../../assets/img/logo/easyfislogo.png" height="30" alt="">
+    </a>
+    <ul class="navbar-nav"></ul>
+    <ul class="navbar-nav mr-auto"></ul>
+    <div class="btn-group">
+        <div class="btn-group">
+            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown" aria-haspopup="true"
+                aria-expanded="false">
+                <fa name="key"></fa> Name
+            </button>
+            <div class="dropdown-menu dropdown-menu-right">
+                <a routerLink="/landing/home" class="dropdown-item">
+                    <fa name="power-off"></fa> Sign out
+                </a>
+            </div>
+        </div>
+    </div>
+</nav>
+<div class="navbar-space"></div>
+
+<mat-sidenav-container class="side-bar-container">
+    <mat-sidenav #sidenav mode="side" class="side-bar">
+        <div class="list-group list-group-style" id="list-tab" role="tablist">
+            <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/sys-main-menu">
+                <img src="../../../assets/img/icons/menu.png" height="30" alt=""> &nbsp; Main Menu
+            </a>
+            <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/mst-shop-group">
+                <img src="../../../assets/img/icons/shopgroup.png" height="30" alt=""> &nbsp; Shop Group
+            </a>
+            <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/mst-shop-order-status">
+                <img src="../../../assets/img/icons/shoporderstatus.png" height="30" alt=""> &nbsp; Shop Order Status
+            </a>
+            <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/trn-shop-order-list">
+                <img src="../../../assets/img/icons/shoporder.png" height="30" alt=""> &nbsp; Shop Order
+            </a>
+            <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/rep-order-summary-report">
+                <img src="../../../assets/img/icons/report.png" height="30" alt=""> &nbsp; Report
+            </a>
+        </div>
+    </mat-sidenav>
+    <mat-sidenav-content>
+        <div class="container-fluid content-header">
+            <button class="btn btn-secondary" (click)="openSideBar()">
+                <fa name="bars"></fa>
+            </button>
+            &nbsp;
+            <img id="toolBarImage" height="30" />
+            &nbsp;
+            <span class="toolbar-title-style">
+                {{ ToolbarTitle }}
+            </span>
+        </div>
+
+        <router-outlet></router-outlet>
+    </mat-sidenav-content>
+</mat-sidenav-container>
+
+<div class="software-footer">
+    <div class="container-fluid">
+        <small><b>Easyfis Online Shop Integrator</b> V.20180102.1132.NOR</small>
+    </div>
+</div>

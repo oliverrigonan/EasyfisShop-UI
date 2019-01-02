@@ -11,6 +11,9 @@ import { RepOrderSummaryReportComponent } from './rep-order-summary-report/rep-o
 import { SysSoftwareLayoutComponent } from './sys-software-layout/sys-software-layout.component';
 import { SysDashboardComponent } from './sys-dashboard/sys-dashboard.component';
 
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { AngularFontAwesomeModule } from 'angular-font-awesome';
+
 @NgModule({
   declarations: [
     MstShopOrderStatusComponent,
@@ -23,7 +26,9 @@ import { SysDashboardComponent } from './sys-dashboard/sys-dashboard.component';
   ],
   imports: [
     CommonModule,
-    SoftwareRoutingModule
+    SoftwareRoutingModule,
+    AngularFontAwesomeModule,
+    MatSidenavModule
   ]
 })
 export class SoftwareModule { }

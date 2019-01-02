@@ -1,3 +1,40 @@
-<p>
-  login works!
-</p>
+<div class="container">
+  <div class="login-panel">
+    <div class="row">
+      <div class="col-lg-4"></div>
+      <div class="col-lg-4">
+        <div class="card">
+          <div class="card-body">
+            <a routerLink="/landing/home"><img src="../../../assets/img/logo/easyfislogo.png" height="40" alt=""></a>
+            <br />
+            <div class="card-title">
+              Sign in to continue to application.
+            </div>
+            <br />
+            <form>
+              <div class="form-group">
+                <label for="inpUsername">Username </label>
+                <input type="text" class="form-control" id="inpUsername" placeholder="Enter Username" required>
+              </div>
+              <div class="form-group">
+                <label for="inpPassword">Password </label>
+                <input type="password" class="form-control" id="inpPassword" placeholder="Enter Password" required>
+              </div>
+              <br />
+              <button type="submit" class="btn btn-primary btn-lg btn-block" routerLink="/software">Sign in</button>
+              <br />
+              <br />
+              <div class="text-center">
+                <small>
+                  <b>Easyfis Online Shop Integrator</b> 
+                  <br />
+                  V.20180102.1132.NOR
+                </small>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4"></div>
+    </div>
+  </div>
