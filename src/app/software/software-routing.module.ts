@@ -9,16 +9,19 @@ import { RepOrderSummaryReportComponent } from './rep-order-summary-report/rep-o
 import { SysSoftwareLayoutComponent } from './sys-software-layout/sys-software-layout.component';
 import { SysDashboardComponent } from './sys-dashboard/sys-dashboard.component';
 
+import { SoftwareRouterActivate } from './software.router.activate';
+
 const routes: Routes = [
   {
-    path: '', component: SysSoftwareLayoutComponent, children: [
-      { path: '', component: SysDashboardComponent },
-      { path: 'sys-main-menu', component: SysDashboardComponent },
-      { path: 'mst-shop-order-status', component: MstShopOrderStatusComponent },
-      { path: 'mst-shop-group', component: MstShopGroupComponent },
-      { path: 'trn-shop-order-list', component: TrnShopOrderListComponent },
-      { path: 'trn-shop-order-list', component: TrnShopOrderDetailComponent },
-      { path: 'rep-order-summary-report', component: RepOrderSummaryReportComponent }
+    path: '', component: SysSoftwareLayoutComponent, canActivate: [SoftwareRouterActivate],
+    children: [
+      { path: '', component: SysDashboardComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'sys-main-menu', component: SysDashboardComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'mst-shop-order-status', component: MstShopOrderStatusComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'mst-shop-group', component: MstShopGroupComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'trn-shop-order-list', component: TrnShopOrderListComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'trn-shop-order-list', component: TrnShopOrderDetailComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'rep-order-summary-report', component: RepOrderSummaryReportComponent, canActivate: [SoftwareRouterActivate] }
     ]
   },
 ];

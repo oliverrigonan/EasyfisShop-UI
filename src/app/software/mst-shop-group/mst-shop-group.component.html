@@ -1,3 +1,85 @@
-<p>
-  mst-shop-group works!
-</p>
+<div class="container-fluid">
+  <div class="card card-default">
+    <div class="card-header">
+      <table border="0" style="width: 100%; border: none;">
+        <tr>
+          <td>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>
+                    <fa name="table"></fa>
+                  </b>
+                </div>
+              </div>
+              <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
+                [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" style="width: 140px;">
+              </wj-combo-box>
+            </div>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-primary" style="margin-right: 5px;">
+              <fa name="plus"></fa> Add
+            </button>
+            <button class="btn btn-danger" routerLink="/software">
+              <fa name="close"></fa> Close
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+    <div class="card-body">
+
+    </div>
+    <div class="card-footer">
+      <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
+        <button type="button" class="btn btn-secondary" (click)="shopGroupCollectionView.moveToFirstPage()">
+          <i class="fa fa-fast-backward"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="shopGroupCollectionView.moveToPreviousPage()">
+          <i class="fa fa-step-backward"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" disabled style="width:100px">
+          <!-- {{ shopGroupCollectionView.pageIndex + 1 }} / {{ shopGroupCollectionView.pageCount }} -->
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="shopGroupCollectionView.moveToNextPage()">
+          <i class="fa fa-step-forward"></i>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="shopGroupCollectionView.moveToLastPage()">
+          <i class="fa fa-fast-forward"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="card card-default" style="margin-top: 10px;">
+    <div class="card-header">
+      User stamp
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p>Created by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;<label id="createdBy">NA</label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;<span id="createdDate">mm/dd/yyyy</span>
+            </small>
+          </div>
+          <br />
+        </div>
+        <div class="col-md-6">
+          <p>Updated by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;<label id="updatedBy">NA</label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;<span id="updatedDate">mm/dd/yyyy</span>
+            </small>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

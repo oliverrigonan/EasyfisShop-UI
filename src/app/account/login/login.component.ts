@@ -33,29 +33,37 @@ export class LoginComponent implements OnInit {
     let inpPassword: Element = document.getElementById("inpPassword");
     inpPassword.setAttribute("disabled", "disabled");
 
-    this.loginService.login(this.loginModel.UserName, this.loginModel.Password);
-    this.loginSubscription = this.loginService.loginObservable.subscribe(
-      data => {
-        if (data[0]) {
-          this.toastr.success(data[1].toString(), 'Success');
+    if ((<HTMLInputElement>inpUsername).value === "" || (<HTMLInputElement>inpPassword).value === "") {
+      this.toastr.error('Username or Password is empty. Please do not leave blanks.', 'Error');
 
-          setTimeout(() => {
-            this.router.navigate(['/software']);
+      btnLogin.removeAttribute("disabled");
+      btnLogin.setAttribute("value", "Sign in");
+      inpUsername.removeAttribute("disabled");
+      inpPassword.removeAttribute("disabled");
+    } else {
+      this.loginService.login(this.loginModel.UserName, this.loginModel.Password);
+      this.loginSubscription = this.loginService.loginObservable.subscribe(
+        data => {
+          if (data[0]) {
+            this.toastr.success(data[1].toString(), 'Success');
+
+            setTimeout(() => {
+              this.router.navigate(['/software']);
+              if (this.loginSubscription != null) this.loginSubscription.unsubscribe();
+            }, 500);
+          } else {
+            this.toastr.error(data[1].toString(), 'Error');
+
+            btnLogin.removeAttribute("disabled");
+            btnLogin.setAttribute("value", "Sign in");
+            inpUsername.removeAttribute("disabled");
+            inpPassword.removeAttribute("disabled");
+
             if (this.loginSubscription != null) this.loginSubscription.unsubscribe();
-          }, 500);
-        } else {
-          this.toastr.error(data[1].toString(), 'Error');
-          
-          btnLogin.removeAttribute("disabled");
-          btnLogin.setAttribute("value", "Sign in");
-
-          inpUsername.removeAttribute("disabled");
-          inpPassword.removeAttribute("disabled");
-
-          if (this.loginSubscription != null) this.loginSubscription.unsubscribe();
+          }
         }
-      }
-    );
+      );
+    }
   }
 
   ngOnInit() {

@@ -1,5 +1,5 @@
 <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">
+    <a class="navbar-brand" routerLink="/landing/home">
         <img src="../../../assets/img/logo/easyfislogo.png" height="30" alt="">
     </a>
     <ul class="navbar-nav"></ul>
@@ -8,10 +8,12 @@
         <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown"
                 aria-haspopup="true" aria-expanded="false">
-                Name
+                {{ username }}
             </a>
             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownMenuLink">
-                <a class="dropdown-item" href="#"><fa name="power-off"></fa> Sign Out</a>
+                <a class="dropdown-item" routerLink="#" (click)="signOut()">
+                    <fa name="power-off"></fa> Sign Out
+                </a>
             </div>
         </li>
     </ul>
@@ -40,7 +42,7 @@
     </mat-sidenav>
     <mat-sidenav-content>
         <div class="container-fluid content-header">
-            <button class="btn btn-secondary" (click)="openSideBar()">
+            <button class="btn btn-info" (click)="openSideBar()">
                 <fa name="bars"></fa>
             </button>
             &nbsp;
@@ -57,6 +59,6 @@
 
 <div class="software-footer">
     <div class="container-fluid">
-        <small><b>Easyfis Online Shop Integrator</b> V.20180102.1132.NOR</small>
+        <small><b>Easyfis Online Shop Integrator</b> V.1.20180102.1132.NOR</small>
     </div>
 </div>

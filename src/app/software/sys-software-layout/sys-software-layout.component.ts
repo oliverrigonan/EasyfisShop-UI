@@ -8,25 +8,28 @@ import { MatSidenav } from '@angular/material';
   styleUrls: ['./sys-software-layout.component.css']
 })
 export class SysSoftwareLayoutComponent implements OnInit {
-
   constructor(
     private router: Router
   ) {
-    router.events.subscribe((val) => {
+    this.routerEvents();
+  }
+
+  public routerEvents(): void {
+    this.router.events.subscribe((val) => {
       let toolBarImage: Element = document.getElementById("toolBarImage");
-      if (router.url == "/software" || router.url == "/software/sys-main-menu") {
+      if (this.router.url == "/software" || this.router.url == "/software/sys-main-menu") {
         this.ToolbarTitle = "Main Menu";
         toolBarImage.setAttribute("src", "../../assets/img/icons/menu.png");
-      } else if (router.url == "/software/mst-shop-order-status") {
+      } else if (this.router.url == "/software/mst-shop-order-status") {
         this.ToolbarTitle = "Status";
         toolBarImage.setAttribute("src", "../../assets/img/icons/shoporderstatus.png");
-      } else if (router.url == "/software/mst-shop-group") {
+      } else if (this.router.url == "/software/mst-shop-group") {
         this.ToolbarTitle = "Group";
         toolBarImage.setAttribute("src", "../../assets/img/icons/shopgroup.png");
-      } else if (router.url == "/software/trn-shop-order-list") {
+      } else if (this.router.url == "/software/trn-shop-order-list") {
         this.ToolbarTitle = "Order";
         toolBarImage.setAttribute("src", "../../assets/img/icons/shoporder.png");
-      } else if (router.url == "/software/rep-order-summary-report") {
+      } else if (this.router.url == "/software/rep-order-summary-report") {
         this.ToolbarTitle = "Reports";
         toolBarImage.setAttribute("src", "../../assets/img/icons/report.png");
       } else {
@@ -35,6 +38,7 @@ export class SysSoftwareLayoutComponent implements OnInit {
     });
   }
 
+  public username: String = "";
   public ToolbarTitle: String = "";
   @ViewChild('sidenav') sidenav: MatSidenav;
 
@@ -42,8 +46,19 @@ export class SysSoftwareLayoutComponent implements OnInit {
     this.sidenav.toggle();
   }
 
-  ngOnInit() {
-    this.openSideBar();
+  public signOut(): void {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('expires_in');
+    localStorage.removeItem('token_type');
+    localStorage.removeItem('username');
+
+    this.username = "";
+    
+    location.reload();
   }
 
+  ngOnInit() {
+    this.openSideBar();
+    this.username = localStorage.getItem("username");
+  }
 }

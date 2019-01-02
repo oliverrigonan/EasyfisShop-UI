@@ -3,8 +3,11 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Routing and Components
+// Routing
 import { SoftwareRoutingModule } from './software-routing.module';
+import { SoftwareRouterActivate } from './software.router.activate';
+
+// Components
 import { MstShopOrderStatusComponent } from './mst-shop-order-status/mst-shop-order-status.component';
 import { MstShopGroupComponent } from './mst-shop-group/mst-shop-group.component';
 import { TrnShopOrderListComponent } from './trn-shop-order-list/trn-shop-order-list.component';
@@ -18,6 +21,10 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 
 // Font Awesome
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
+
+// Wijmo
+import { WjGridModule } from 'wijmo/wijmo.angular2.grid';
+import { WjInputModule } from 'wijmo/wijmo.angular2.input';
 
 @NgModule({
   declarations: [
@@ -35,7 +42,12 @@ import { AngularFontAwesomeModule } from 'angular-font-awesome';
     ReactiveFormsModule,
     SoftwareRoutingModule,
     AngularFontAwesomeModule,
-    MatSidenavModule
+    MatSidenavModule,
+    WjGridModule,
+    WjInputModule
+  ],
+  providers: [
+    SoftwareRouterActivate
   ]
 })
 export class SoftwareModule { }

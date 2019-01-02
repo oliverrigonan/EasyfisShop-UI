@@ -3,8 +3,10 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-// Routing and Component
+// Routing 
 import { AccountRoutingModule } from './account-routing.module';
+
+// Components
 import { LoginComponent } from './login/login.component';
 
 @NgModule({
