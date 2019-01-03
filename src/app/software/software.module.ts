@@ -23,8 +23,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
 
 // Wijmo
+import { WjGridFilterModule } from 'wijmo/wijmo.angular2.grid.filter';
 import { WjGridModule } from 'wijmo/wijmo.angular2.grid';
 import { WjInputModule } from 'wijmo/wijmo.angular2.input';
+
+// ngx Bootstrap
+import { ModalModule } from 'ngx-bootstrap/modal';
 
 @NgModule({
   declarations: [
@@ -43,8 +47,10 @@ import { WjInputModule } from 'wijmo/wijmo.angular2.input';
     SoftwareRoutingModule,
     AngularFontAwesomeModule,
     MatSidenavModule,
+    WjGridFilterModule,
     WjGridModule,
-    WjInputModule
+    WjInputModule,
+    ModalModule.forRoot()
   ],
   providers: [
     SoftwareRouterActivate

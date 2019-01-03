@@ -1,12 +1,17 @@
 /* You can add global styles to this file, and also import other style files */
-/* input {
-    border-radius: 50px !important;
-    padding-left: 20px !important;
-    padding-right: 20px !important;
+.btn-xs {
+    padding: 0.1rem 0.1rem !important;
+    font-size: 0.775rem !important; 
+    line-height: 1.5 !important;
+    border-radius: 0.2rem !important;
 }
 
-button, .btn {
-    border-radius: 50px !important;
-    padding-left: 30px !important;
-    padding-right: 30px !important;
-} */
+.form-group-label {
+    text-align: left;
+}
+
+@media (min-width: 768px) {
+    .form-group-label {
+        text-align: right;
+    }
+}

@@ -9,7 +9,7 @@ import { Subject } from 'rxjs';
 export class LoginService {
   constructor(
     private appSettings: AppSettings,
-    private httpClient: HttpClient,
+    private httpClient: HttpClient
   ) { }
 
   public defaultAPIHostURL: string = this.appSettings.defaultAPIURLHost;

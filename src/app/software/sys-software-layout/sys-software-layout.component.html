@@ -1,4 +1,4 @@
-<nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light">
+<nav class="navbar fixed-top navbar-expand-sm navbar-light bg-light">
     <a class="navbar-brand" routerLink="/landing/home">
         <img src="../../../assets/img/logo/easyfislogo.png" height="30" alt="">
     </a>
@@ -19,9 +19,8 @@
     </ul>
 </nav>
 <div class="navbar-space"></div>
-
-<mat-sidenav-container class="side-bar-container">
-    <mat-sidenav #sidenav mode="side" class="side-bar">
+<mat-drawer-container class="side-bar-container">
+    <mat-drawer #sidenav mode="side" class="side-bar">
         <div class="list-group list-group-style" id="list-tab" role="tablist">
             <a class="list-group-item list-group-item-action" id="list-home-list" routerLink="/software/sys-main-menu">
                 <img src="../../../assets/img/icons/menu.png" height="30" alt=""> &nbsp; Main Menu
@@ -39,8 +38,8 @@
                 <img src="../../../assets/img/icons/report.png" height="30" alt=""> &nbsp; Report
             </a>
         </div>
-    </mat-sidenav>
-    <mat-sidenav-content>
+    </mat-drawer>
+    <mat-drawer-content>
         <div class="container-fluid content-header">
             <button class="btn btn-info" (click)="openSideBar()">
                 <fa name="bars"></fa>
@@ -52,11 +51,11 @@
                 {{ ToolbarTitle }}
             </span>
         </div>
-
-        <router-outlet></router-outlet>
-    </mat-sidenav-content>
-</mat-sidenav-container>
-
+        <div class="container-fluid">
+            <router-outlet></router-outlet>
+        </div>
+    </mat-drawer-content>
+</mat-drawer-container>
 <div class="software-footer">
     <div class="container-fluid">
         <small><b>Easyfis Online Shop Integrator</b> V.1.20180102.1132.NOR</small>
