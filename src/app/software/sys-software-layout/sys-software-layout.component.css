@@ -16,22 +16,14 @@
 
 .side-bar {
     width: 300px;
+    padding: 10px;
     border-right: 1px solid #e6e6e6;
 }
 
-.list-group-style {
-    background: transparent;
-}
-
-.list-group-item {
-    border-radius: 0 !important;
-    border-left: none !important;
-    border-right: none !important;
-}
-
 .list-group-item:hover {
-    background: #e6e6e6;
-    transition: 0.5s all;
+    background: #002b80;
+    transition: 1s all;
+    color: white;
 }
 
 .software-footer {

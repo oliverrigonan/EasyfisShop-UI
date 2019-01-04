@@ -33,7 +33,7 @@ export class SysSoftwareLayoutComponent implements OnInit {
         this.ToolbarTitle = "Reports";
         toolBarImage.setAttribute("src", "../../assets/img/icons/report.png");
       } else {
-        this.ToolbarTitle = "Easyfis Shop";
+        // this.ToolbarTitle = "Easyfis Shop";
       }
     });
   }
