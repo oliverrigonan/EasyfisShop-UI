@@ -20,7 +20,7 @@ const routes: Routes = [
       { path: 'mst-shop-order-status', component: MstShopOrderStatusComponent, canActivate: [SoftwareRouterActivate] },
       { path: 'mst-shop-group', component: MstShopGroupComponent, canActivate: [SoftwareRouterActivate] },
       { path: 'trn-shop-order-list', component: TrnShopOrderListComponent, canActivate: [SoftwareRouterActivate] },
-      { path: 'trn-shop-order-list', component: TrnShopOrderDetailComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'trn-shop-order-detail/:id', component: TrnShopOrderDetailComponent, canActivate: [SoftwareRouterActivate] },
       { path: 'rep-order-summary-report', component: RepOrderSummaryReportComponent, canActivate: [SoftwareRouterActivate] }
     ]
   },

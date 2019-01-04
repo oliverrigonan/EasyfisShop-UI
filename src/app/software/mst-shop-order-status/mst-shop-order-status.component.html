@@ -1,85 +1,197 @@
-<div class="container-fluid">
-  <div class="card card-default">
-    <div class="card-header">
-      <table border="0" style="width: 100%; border: none;">
-        <tr>
-          <td>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <b>
-                    <fa name="table"></fa>
-                  </b>
-                </div>
+<div class="card card-default">
+  <!-- Header -->
+  <div class="card-header">
+    <table border="0" style="width: 100%; border: none;">
+      <tr>
+        <td>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <b>
+                  <fa name="table"></fa>
+                </b>
               </div>
-              <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
-                [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" style="width: 140px;">
-              </wj-combo-box>
             </div>
-          </td>
-          <td style="text-align: right;">
-            <button class="btn btn-primary" style="margin-right: 5px;">
-              <fa name="plus"></fa> Add
-            </button>
-            <button class="btn btn-danger" routerLink="/software">
-              <fa name="close"></fa> Close
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div class="card-body">
+            <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
+              [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
+              style="width: 140px;">
+            </wj-combo-box>
+          </div>
+        </td>
+        <td style="text-align: right;">
+          <button class="btn btn-primary" (click)="btnOpenShopOrderStatusModalClick(shopOrderStatusModalTemplate, true)"
+            style="margin-right: 5px;" id="btnOpenShopOrderStatusModal">
+            <fa name="plus"></fa> Add
+          </button>
+          <button class="btn btn-danger" routerLink="/software" id="btnCloseShopOrderStatus">
+            <fa name="close"></fa> Close
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
 
-    </div>
-    <div class="card-footer">
-      <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
-        <button type="button" class="btn btn-secondary" (click)="shopOrderStatusCollectionView.moveToFirstPage()">
-          <i class="fa fa-fast-backward"></i>
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="shopOrderStatusCollectionView.moveToPreviousPage()">
-          <i class="fa fa-step-backward"></i>
-        </button>
-        <button type="button" class="btn btn-secondary" disabled style="width:100px">
-          <!-- {{ shopOrderStatusCollectionView.pageIndex + 1 }} / {{ shopOrderStatusCollectionView.pageCount }} -->
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="shopOrderStatusCollectionView.moveToNextPage()">
-          <i class="fa fa-step-forward"></i>
-        </button>
-        <button type="button" class="btn btn-secondary" (click)="shopOrderStatusCollectionView.moveToLastPage()">
-          <i class="fa fa-fast-forward"></i>
-        </button>
-      </div>
+  <!-- Flexgrid -->
+  <div class="card-body">
+    <wj-flex-grid #listShopOrderStatusFlexGrid [itemsSource]="listShopOrderStatusCollectionView" [selectionMode]="3"
+      [frozenColumns]="2">
+      <wj-flex-grid-filter></wj-flex-grid-filter>
+      <wj-flex-grid-column [header]="Edit" [isReadOnly]="true" [width]="80">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+          <button type="button" class="btn btn-primary btn-block btn-xs" (click)="btnOpenShopOrderStatusModalClick(shopOrderStatusModalTemplate, false)"
+            id="btnOpenShopOrderStatusModal">
+            <fa name="edit"></fa> Edit
+          </button>
+        </ng-template>
+      </wj-flex-grid-column>
+      <wj-flex-grid-column [header]="Delete" [isReadOnly]="true" [width]="90">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+          <button type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopOrderStatusClick(shopOrderStatusDeleteModalTemplate)"
+            id="btnDeleteShopOrderStatus">
+            <fa name="trash"></fa> Delete
+          </button>
+        </ng-template>
+      </wj-flex-grid-column>
+      <wj-flex-grid-column [header]="'Code'" [binding]="'ShopOrderStatusCode'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+      <wj-flex-grid-column [header]="'Status'" [binding]="'ShopOrderStatus'" [isReadOnly]="true" [width]="'3*'"></wj-flex-grid-column>
+    </wj-flex-grid>
+  </div>
+
+  <!-- Navigation flexgrid -->
+  <div class="card-footer">
+    <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
+      <button type="button" class="btn btn-secondary" (click)="listShopOrderStatusCollectionView.moveToFirstPage()">
+        <fa name="fast-backward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopOrderStatusCollectionView.moveToPreviousPage()">
+        <fa name="step-backward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" disabled style="width:100px">
+        {{ listShopOrderStatusCollectionView.pageIndex + 1 }} / {{ listShopOrderStatusCollectionView.pageCount }}
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopOrderStatusCollectionView.moveToNextPage()">
+        <fa name="step-forward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopOrderStatusCollectionView.moveToLastPage()">
+        <fa name="fast-forward"></fa>
+      </button>
     </div>
   </div>
-  <div class="card card-default" style="margin-top: 10px;">
-    <div class="card-header">
-      User stamp
-    </div>
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-6">
-          <p>Created by:</p>
-          <div style="padding-left: 10px;">
-            <fa name="key"></fa>&nbsp;<label id="createdBy">NA</label>
-            <br />
-            <small>
-              <fa name="calendar"></fa>&nbsp;&nbsp;<span id="createdDate">mm/dd/yyyy</span>
-            </small>
-          </div>
+</div>
+
+<!-- User stamp -->
+<div class="card card-default" style="margin-top: 10px;">
+  <div class="card-header">
+    User stamp
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <p>Created by:</p>
+        <div style="padding-left: 10px;">
+          <fa name="key"></fa>&nbsp;
+          <label id="createdBy">
+            {{
+            listShopOrderStatusCollectionView.items.length > 0 ?
+            listShopOrderStatusCollectionView.currentItem.CreatedBy : 'NA'
+            }}
+          </label>
           <br />
+          <small>
+            <fa name="calendar"></fa>&nbsp;&nbsp;
+            <span id="createdDate">
+              {{
+              listShopOrderStatusCollectionView.items.length > 0 ?
+              listShopOrderStatusCollectionView.currentItem.CreatedDateTime : 'mm/dd/yyyy'
+              }}
+            </span>
+          </small>
         </div>
-        <div class="col-md-6">
-          <p>Updated by:</p>
-          <div style="padding-left: 10px;">
-            <fa name="key"></fa>&nbsp;<label id="updatedBy">NA</label>
-            <br />
-            <small>
-              <fa name="calendar"></fa>&nbsp;&nbsp;<span id="updatedDate">mm/dd/yyyy</span>
-            </small>
-          </div>
+        <br />
+      </div>
+      <div class="col-md-6">
+        <p>Updated by:</p>
+        <div style="padding-left: 10px;">
+          <fa name="key"></fa>&nbsp;
+          <label id="updatedBy">
+            {{
+            listShopOrderStatusCollectionView.items.length > 0 ?
+            listShopOrderStatusCollectionView.currentItem.UpdatedBy : 'NA'
+            }}
+          </label>
           <br />
+          <small>
+            <fa name="calendar"></fa>&nbsp;&nbsp;
+            <span id="updatedDate">
+              {{
+              listShopOrderStatusCollectionView.items.length > 0 ?
+              listShopOrderStatusCollectionView.currentItem.UpdatedDateTime : 'mm/dd/yyyy'
+              }}
+            </span>
+          </small>
         </div>
+        <br />
       </div>
     </div>
   </div>
 </div>
+
+<!-- Shop order status modal -->
+<ng-template #shopOrderStatusModalTemplate>
+  <div class="modal-header">
+    <h5 class="modal-title" id="shopOrderStatusModalLabel">{{ shopOrderStatusModalTitle }}</h5>
+    <button type="button" class="close" (click)="shopOrderStatusModalRef.hide()" aria-label="Close">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="form-group row">
+      <label for="inpShopOrderStatusCode" class="col-sm-3 col-form-label form-group-label">Code</label>
+      <div class="col-sm-9">
+        <input type="text" [(ngModel)]="mstShopOrderStatus.ShopOrderStatusCode" class="form-control" id="inpShopOrderStatusCode"
+          placeholder="Code...">
+      </div>
+      <br /><br />
+      <label for="inpShopOrderStatusName" class="col-sm-3 col-form-label form-group-label">Status</label>
+      <div class="col-sm-9">
+        <input type="text" [(ngModel)]="mstShopOrderStatus.ShopOrderStatus" class="form-control" id="inpShopOrderStatusName"
+          placeholder="Status Name...">
+      </div>
+    </div>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-primary" (click)="btnSaveShopOrderStatusClick()" id="btnSaveShopOrderStatus">
+      <fa name="save"></fa> Save
+    </button>
+    <button type="button" class="btn btn-danger" (click)="shopOrderStatusModalRef.hide()" id="btnCloseShopOrderStatusModal">
+      <fa name="close"></fa> Close
+    </button>
+  </div>
+</ng-template>
+
+<!-- Shop order status delete modal -->
+<ng-template #shopOrderStatusDeleteModalTemplate>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      Delete
+    </h4>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to delete this status
+    <b>
+      {{
+      listShopOrderStatusCollectionView.items.length > 0 ?
+      listShopOrderStatusCollectionView.currentItem.ShopOrderStatus : 'NA'
+      }}
+    </b>?
+  </div>
+  <div class="modal-footer">
+    <button type="button" [hidden]="isDeleteButtonHide" class="btn btn-danger" style="margin-right: 5px;" (click)="btnConfirmDeleteShopOrderStatusClick()"
+      id="btnConfirmDeleteShopOrderStatus">
+      <fa name="trash"></fa> Delete
+    </button>
+    <button type="button" class="btn" (click)="shopOrderStatusDeleteModalRef.hide()" id="btnCloseConfirmDeleteShopOrderStatusModal">
+      <fa name="close"></fa> Cancel
+    </button>
+  </div>
+</ng-template>

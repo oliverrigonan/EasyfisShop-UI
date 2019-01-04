@@ -29,7 +29,7 @@ export class MstShopGroupComponent implements OnInit {
   public listShopGroupObservableArray: ObservableArray = new ObservableArray();
   public listShopGroupCollectionView: CollectionView = new CollectionView(this.listShopGroupObservableArray);
   public listShopPageIndex: number = 15;
-  @ViewChild('listShopFlexGrid') listShopFlexGrid: WjFlexGrid;
+  @ViewChild('listShopGroupFlexGrid') listShopGroupFlexGrid: WjFlexGrid;
 
   public saveShopGroupSubscription: any;
   public deleteShopGroupSubscription: any;
@@ -85,14 +85,14 @@ export class MstShopGroupComponent implements OnInit {
     this.listShopGroupCollectionView.refresh();
   }
 
-  // List Shop Group
+  // List shop group
   public listShopGroup(): void {
     this.listShopGroupObservableArray = new ObservableArray();
     this.listShopGroupCollectionView = new CollectionView(this.listShopGroupObservableArray);
     this.listShopGroupCollectionView.pageSize = 15;
     this.listShopGroupCollectionView.trackChanges = true;
     this.listShopGroupCollectionView.refresh();
-    this.listShopFlexGrid.refresh();
+    this.listShopGroupFlexGrid.refresh();
 
     this.mstShopGroupService.listShopGroup();
     this.listShopGroupSubscription = this.mstShopGroupService.listShopGroupObservable.subscribe(
@@ -103,10 +103,10 @@ export class MstShopGroupComponent implements OnInit {
           this.listShopGroupCollectionView.pageSize = this.listShopPageIndex;
           this.listShopGroupCollectionView.trackChanges = true;
           this.listShopGroupCollectionView.refresh();
-          this.listShopFlexGrid.refresh();
-
-          if (this.listShopGroupSubscription != null) this.listShopGroupSubscription.unsubscribe();
+          this.listShopGroupFlexGrid.refresh();
         }
+
+        if (this.listShopGroupSubscription != null) this.listShopGroupSubscription.unsubscribe();
       }
     );
   }
@@ -115,19 +115,24 @@ export class MstShopGroupComponent implements OnInit {
   public btnOpenShopGroupModalClick(shopGroupModalTemplate: TemplateRef<any>, isNew: Boolean): void {
     this.shopGroupModalRef = this.modalService.show(shopGroupModalTemplate, { class: "" });
 
+    let inpShopGroupCode: Element = document.getElementById("inpShopGroupCode");
+    let inpShopGroupName: Element = document.getElementById("inpShopGroupName");
+    (<HTMLInputElement>inpShopGroupCode).disabled = false;
+    (<HTMLInputElement>inpShopGroupName).disabled = false;
+
     let btnSaveShopGroup: Element = document.getElementById("btnSaveShopGroup");
     let btnCloseShopGroupModal: Element = document.getElementById("btnCloseShopGroupModal");
     (<HTMLButtonElement>btnSaveShopGroup).disabled = false;
     (<HTMLButtonElement>btnCloseShopGroupModal).disabled = false;
 
     if (isNew) {
-      this.shopGroupModalTitle = "New Shop Group";
+      this.shopGroupModalTitle = "New Group";
 
       this.mstShopGroup.Id = 0;
       this.mstShopGroup.ShopGroupCode = "";
       this.mstShopGroup.ShopGroup = "";
     } else {
-      this.shopGroupModalTitle = "Edit Shop Group";
+      this.shopGroupModalTitle = "Edit Group";
 
       let currentShopGroup = this.listShopGroupCollectionView.currentItem;
       this.mstShopGroup.Id = currentShopGroup.Id;
@@ -138,6 +143,11 @@ export class MstShopGroupComponent implements OnInit {
 
   // Save shop group
   public btnSaveShopGroupClick(): void {
+    let inpShopGroupCode: Element = document.getElementById("inpShopGroupCode");
+    let inpShopGroupName: Element = document.getElementById("inpShopGroupName");
+    (<HTMLInputElement>inpShopGroupCode).disabled = true;
+    (<HTMLInputElement>inpShopGroupName).disabled = true;
+
     let btnSaveShopGroup: Element = document.getElementById("btnSaveShopGroup");
     let btnCloseShopGroupModal: Element = document.getElementById("btnCloseShopGroupModal");
     (<HTMLButtonElement>btnSaveShopGroup).disabled = true;
@@ -148,7 +158,7 @@ export class MstShopGroupComponent implements OnInit {
       this.saveShopGroupSubscription = this.mstShopGroupService.saveShopGroupObservable.subscribe(
         data => {
           if (data[0] == "success") {
-            this.toastr.success("Shop Group was successfully saved.", "Success");
+            this.toastr.success("Shop group was successfully saved.", "Success");
 
             this.shopGroupModalRef.hide();
             this.listShopGroup();
@@ -164,6 +174,9 @@ export class MstShopGroupComponent implements OnInit {
       );
     } else {
       this.toastr.error("Please don't leave empty fields.", "Error");
+
+      (<HTMLInputElement>inpShopGroupCode).disabled = false;
+      (<HTMLInputElement>inpShopGroupName).disabled = false;
 
       (<HTMLButtonElement>btnSaveShopGroup).disabled = false;
       (<HTMLButtonElement>btnCloseShopGroupModal).disabled = false;
@@ -194,7 +207,7 @@ export class MstShopGroupComponent implements OnInit {
     this.deleteShopGroupSubscription = this.mstShopGroupService.deleteShopGroupObservable.subscribe(
       data => {
         if (data[0] == "success") {
-          this.toastr.success("Shop Group was successfully deleted.", "Success");
+          this.toastr.success("Shop group was successfully deleted.", "Success");
 
           this.shopGroupDeleteModalRef.hide();
           this.listShopGroup();

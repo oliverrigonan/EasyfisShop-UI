@@ -33,7 +33,7 @@
 
   <!-- Flexgrid -->
   <div class="card-body">
-    <wj-flex-grid #listShopFlexGrid [itemsSource]="listShopGroupCollectionView" [selectionMode]="3" [frozenColumns]="2">
+    <wj-flex-grid #listShopGroupFlexGrid [itemsSource]="listShopGroupCollectionView" [selectionMode]="3" [frozenColumns]="2">
       <wj-flex-grid-filter></wj-flex-grid-filter>
       <wj-flex-grid-column [header]="Edit" [isReadOnly]="true" [width]="80">
         <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
@@ -145,15 +145,15 @@
   </div>
   <div class="modal-body">
     <div class="form-group row">
-      <label for="inp-shop-group-code" class="col-sm-3 col-form-label form-group-label">Code</label>
+      <label for="inpShopGroupCode" class="col-sm-3 col-form-label form-group-label">Code</label>
       <div class="col-sm-9">
-        <input type="text" [(ngModel)]="mstShopGroup.ShopGroupCode" class="form-control" id="inp-shop-group-code"
+        <input type="text" [(ngModel)]="mstShopGroup.ShopGroupCode" class="form-control" id="inpShopGroupCode"
           placeholder="Code...">
       </div>
       <br /><br />
-      <label for="inp-shop-group-name" class="col-sm-3 col-form-label form-group-label">Group</label>
+      <label for="inpShopGroupName" class="col-sm-3 col-form-label form-group-label">Group</label>
       <div class="col-sm-9">
-        <input type="text" [(ngModel)]="mstShopGroup.ShopGroup" class="form-control" id="inp-shop-group-name"
+        <input type="text" [(ngModel)]="mstShopGroup.ShopGroup" class="form-control" id="inpShopGroupName"
           placeholder="Group Name...">
       </div>
     </div>
@@ -176,7 +176,7 @@
     </h4>
   </div>
   <div class="modal-body">
-    Are you sure you want to delete this shop group
+    Are you sure you want to delete this group
     <b>
       {{
       listShopGroupCollectionView.items.length > 0 ?
