@@ -30,7 +30,7 @@ export class SysSoftwareLayoutComponent implements OnInit {
         this.ToolbarTitle = "Order";
         toolBarImage.setAttribute("src", "../../assets/img/icons/shoporder.png");
       } else if (this.router.url == "/software/rep-order-summary-report") {
-        this.ToolbarTitle = "Reports";
+        this.ToolbarTitle = "Report";
         toolBarImage.setAttribute("src", "../../assets/img/icons/report.png");
       } else {
         // this.ToolbarTitle = "Easyfis Shop";
@@ -53,7 +53,7 @@ export class SysSoftwareLayoutComponent implements OnInit {
     localStorage.removeItem('username');
 
     this.username = "";
-    
+
     location.reload();
   }
 
