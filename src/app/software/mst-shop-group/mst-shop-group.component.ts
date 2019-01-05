@@ -11,6 +11,9 @@ import { MstShopGroupModel } from './mst-shop-group.model';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { SoftwareUserFormService } from '../software-user-form.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-mst-shop-group',
   templateUrl: './mst-shop-group.component.html',
@@ -20,7 +23,9 @@ export class MstShopGroupComponent implements OnInit {
   constructor(
     private mstShopGroupService: MstShopGroupService,
     private modalService: BsModalService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private softwareUserFormService: SoftwareUserFormService,
+    private router: Router
   ) { }
 
   public cboShowNumberOfRows: ObservableArray = new ObservableArray();
@@ -44,6 +49,19 @@ export class MstShopGroupComponent implements OnInit {
   public shopGroupModalRef: BsModalRef;
 
   public shopGroupDeleteModalRef: BsModalRef;
+
+  public getUserFormsSubscription: any;
+  public isLoadingSpinnerHidden: boolean = false;
+  public isContentHidden: boolean = true;
+  
+  public isAddButtonHide: boolean = true;
+  public isEditButtonHide: boolean = true;
+  public isDeleteButtonHide: boolean = true;
+  
+  public isShowEditColumn: boolean = false;
+  public isShowDeleteColumn: boolean = false;
+
+  public isProgressBarHidden = false;
 
   // Combo box for number of rows
   public createCboShowNumberOfRows(): void {
@@ -73,8 +91,6 @@ export class MstShopGroupComponent implements OnInit {
         rowString: rowsString
       });
     }
-
-    this.listShopGroup();
   }
 
   public cboShowNumberOfRowsOnSelectedIndexChanged(selectedValue: any): void {
@@ -93,6 +109,8 @@ export class MstShopGroupComponent implements OnInit {
     this.listShopGroupCollectionView.trackChanges = true;
     this.listShopGroupCollectionView.refresh();
     this.listShopGroupFlexGrid.refresh();
+    
+    this.isProgressBarHidden = false;
 
     this.mstShopGroupService.listShopGroup();
     this.listShopGroupSubscription = this.mstShopGroupService.listShopGroupObservable.subscribe(
@@ -106,6 +124,7 @@ export class MstShopGroupComponent implements OnInit {
           this.listShopGroupFlexGrid.refresh();
         }
 
+        this.isProgressBarHidden = true;
         if (this.listShopGroupSubscription != null) this.listShopGroupSubscription.unsubscribe();
       }
     );
@@ -229,6 +248,41 @@ export class MstShopGroupComponent implements OnInit {
   // On page load
   ngOnInit() {
     this.createCboShowNumberOfRows();
+    setTimeout(() => {
+      this.softwareUserFormService.getCurrentForm("ShopGroupList");
+      this.getUserFormsSubscription = this.softwareUserFormService.getCurrentUserFormsObservable.subscribe(
+        data => {
+          if (data != null) {
+            this.isLoadingSpinnerHidden = true;
+            this.isContentHidden = false;
+            
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanEdit) {
+              this.isEditButtonHide = false;
+              this.isShowEditColumn = true;
+            }
+
+            if (data.CanDelete) {
+              this.isDeleteButtonHide = false;
+              this.isShowDeleteColumn = true;
+            }
+
+            this.listShopGroup();
+          } else {
+            this.router.navigateByUrl("/software/err-forbidden", { skipLocationChange: true });
+          }
+
+          if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
+        }
+      );
+    }, 1000);
   }
 
   // On page destroy
@@ -236,5 +290,6 @@ export class MstShopGroupComponent implements OnInit {
     if (this.listShopGroupSubscription != null) this.listShopGroupSubscription.unsubscribe();
     if (this.saveShopGroupSubscription != null) this.saveShopGroupSubscription.unsubscribe();
     if (this.deleteShopGroupSubscription != null) this.deleteShopGroupSubscription.unsubscribe();
+    if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
   }
 }

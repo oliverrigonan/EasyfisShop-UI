@@ -1,196 +1,204 @@
-<div class="card card-default">
-  <!-- Header -->
-  <div class="card-header">
-    <table border="0" style="width: 100%; border: none;">
-      <tr>
-        <td>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>
-                  <fa name="table"></fa>
-                </b>
+<div [hidden]="isLoadingSpinnerHidden">
+  <br /><br /><br />
+  <mat-spinner style="margin: auto;"></mat-spinner>
+</div>
+<div [hidden]="isContentHidden">
+  <div class="card card-default">
+    <!-- Header -->
+    <div class="card-header">
+      <table border="0" style="width: 100%; border: none;">
+        <tr>
+          <td>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>
+                    <fa name="table"></fa>
+                  </b>
+                </div>
               </div>
+              <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
+                [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
+                style="width: 140px;">
+              </wj-combo-box>
             </div>
-            <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
-              [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
-              style="width: 140px;">
-            </wj-combo-box>
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-primary" [hidden]="isAddButtonHide" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, true)"
+              style="margin-right: 5px;" id="btnOpenShopGroupModal">
+              <fa name="plus"></fa> Add
+            </button>
+            <button class="btn btn-danger" routerLink="/software" id="btnCloseShopGroup">
+              <fa name="close"></fa> Close
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Flexgrid -->
+    <div class="card-body">
+      <mat-progress-bar [hidden]="isProgressBarHidden" [color]="'primary'" [mode]="'indeterminate'"></mat-progress-bar>
+      <wj-flex-grid #listShopGroupFlexGrid [itemsSource]="listShopGroupCollectionView" [selectionMode]="3"
+        [frozenColumns]="2">
+        <wj-flex-grid-filter></wj-flex-grid-filter>
+        <wj-flex-grid-column *ngIf="isShowEditColumn" [header]="Edit" [isReadOnly]="true" [width]="80">
+          <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+            <button [hidden]="isEditButtonHide" type="button" class="btn btn-primary btn-block btn-xs" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, false)"
+              id="btnOpenShopGroupModal">
+              <fa name="edit"></fa> Edit
+            </button>
+          </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column *ngIf="isShowDeleteColumn" [header]="Delete" [isReadOnly]="true" [width]="90">
+          <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+            <button [hidden]="isDeleteButtonHide" type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopGroupClick(shopGroupDeleteModalTemplate)"
+              id="btnDeleteShopGroup">
+              <fa name="trash"></fa> Delete
+            </button>
+          </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Code'" [binding]="'ShopGroupCode'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Group'" [binding]="'ShopGroup'" [isReadOnly]="true" [width]="'3*'"></wj-flex-grid-column>
+      </wj-flex-grid>
+    </div>
+
+    <!-- Navigation flexgrid -->
+    <div class="card-footer">
+      <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
+        <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToFirstPage()">
+          <fa name="fast-backward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToPreviousPage()">
+          <fa name="step-backward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" disabled style="width:100px">
+          {{ listShopGroupCollectionView.pageIndex + 1 }} / {{ listShopGroupCollectionView.pageCount }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToNextPage()">
+          <fa name="step-forward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToLastPage()">
+          <fa name="fast-forward"></fa>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- User stamp -->
+  <div class="card card-default" style="margin-top: 10px;">
+    <div class="card-header">
+      User stamp
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p>Created by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;
+            <label id="createdBy">
+              {{
+              listShopGroupCollectionView.items.length > 0 ?
+              listShopGroupCollectionView.currentItem.CreatedBy : 'NA'
+              }}
+            </label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;
+              <span id="createdDate">
+                {{
+                listShopGroupCollectionView.items.length > 0 ?
+                listShopGroupCollectionView.currentItem.CreatedDateTime : 'mm/dd/yyyy'
+                }}
+              </span>
+            </small>
           </div>
-        </td>
-        <td style="text-align: right;">
-          <button class="btn btn-primary" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, true)" style="margin-right: 5px;"
-            id="btnOpenShopGroupModal">
-            <fa name="plus"></fa> Add
-          </button>
-          <button class="btn btn-danger" routerLink="/software" id="btnCloseShopGroup">
-            <fa name="close"></fa> Close
-          </button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Flexgrid -->
-  <div class="card-body">
-    <wj-flex-grid #listShopGroupFlexGrid [itemsSource]="listShopGroupCollectionView" [selectionMode]="3" [frozenColumns]="2">
-      <wj-flex-grid-filter></wj-flex-grid-filter>
-      <wj-flex-grid-column [header]="Edit" [isReadOnly]="true" [width]="80">
-        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
-          <button type="button" class="btn btn-primary btn-block btn-xs" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, false)"
-            id="btnOpenShopGroupModal">
-            <fa name="edit"></fa> Edit
-          </button>
-        </ng-template>
-      </wj-flex-grid-column>
-      <wj-flex-grid-column [header]="Delete" [isReadOnly]="true" [width]="90">
-        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
-          <button type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopGroupClick(shopGroupDeleteModalTemplate)"
-            id="btnDeleteShopGroup">
-            <fa name="trash"></fa> Delete
-          </button>
-        </ng-template>
-      </wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Code'" [binding]="'ShopGroupCode'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Group'" [binding]="'ShopGroup'" [isReadOnly]="true" [width]="'3*'"></wj-flex-grid-column>
-    </wj-flex-grid>
-  </div>
-
-  <!-- Navigation flexgrid -->
-  <div class="card-footer">
-    <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
-      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToFirstPage()">
-        <fa name="fast-backward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToPreviousPage()">
-        <fa name="step-backward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" disabled style="width:100px">
-        {{ listShopGroupCollectionView.pageIndex + 1 }} / {{ listShopGroupCollectionView.pageCount }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToNextPage()">
-        <fa name="step-forward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToLastPage()">
-        <fa name="fast-forward"></fa>
-      </button>
-    </div>
-  </div>
-</div>
-
-<!-- User stamp -->
-<div class="card card-default" style="margin-top: 10px;">
-  <div class="card-header">
-    User stamp
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6">
-        <p>Created by:</p>
-        <div style="padding-left: 10px;">
-          <fa name="key"></fa>&nbsp;
-          <label id="createdBy">
-            {{
-            listShopGroupCollectionView.items.length > 0 ?
-            listShopGroupCollectionView.currentItem.CreatedBy : 'NA'
-            }}
-          </label>
           <br />
-          <small>
-            <fa name="calendar"></fa>&nbsp;&nbsp;
-            <span id="createdDate">
+        </div>
+        <div class="col-md-6">
+          <p>Updated by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;
+            <label id="updatedBy">
               {{
               listShopGroupCollectionView.items.length > 0 ?
-              listShopGroupCollectionView.currentItem.CreatedDateTime : 'mm/dd/yyyy'
+              listShopGroupCollectionView.currentItem.UpdatedBy : 'NA'
               }}
-            </span>
-          </small>
-        </div>
-        <br />
-      </div>
-      <div class="col-md-6">
-        <p>Updated by:</p>
-        <div style="padding-left: 10px;">
-          <fa name="key"></fa>&nbsp;
-          <label id="updatedBy">
-            {{
-            listShopGroupCollectionView.items.length > 0 ?
-            listShopGroupCollectionView.currentItem.UpdatedBy : 'NA'
-            }}
-          </label>
+            </label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;
+              <span id="updatedDate">
+                {{
+                listShopGroupCollectionView.items.length > 0 ?
+                listShopGroupCollectionView.currentItem.UpdatedDateTime : 'mm/dd/yyyy'
+                }}
+              </span>
+            </small>
+          </div>
           <br />
-          <small>
-            <fa name="calendar"></fa>&nbsp;&nbsp;
-            <span id="updatedDate">
-              {{
-              listShopGroupCollectionView.items.length > 0 ?
-              listShopGroupCollectionView.currentItem.UpdatedDateTime : 'mm/dd/yyyy'
-              }}
-            </span>
-          </small>
         </div>
-        <br />
       </div>
     </div>
   </div>
+
+  <!-- Shop group modal -->
+  <ng-template #shopGroupModalTemplate>
+    <div class="modal-header">
+      <h5 class="modal-title" id="shopGroupModalLabel">{{ shopGroupModalTitle }}</h5>
+      <button type="button" class="close" (click)="shopGroupModalRef.hide()" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group row">
+        <label for="inpShopGroupCode" class="col-sm-3 col-form-label form-group-label">Code</label>
+        <div class="col-sm-9">
+          <input type="text" [(ngModel)]="mstShopGroup.ShopGroupCode" class="form-control" id="inpShopGroupCode"
+            placeholder="Code...">
+        </div>
+        <br /><br />
+        <label for="inpShopGroupName" class="col-sm-3 col-form-label form-group-label">Group</label>
+        <div class="col-sm-9">
+          <input type="text" [(ngModel)]="mstShopGroup.ShopGroup" class="form-control" id="inpShopGroupName"
+            placeholder="Group Name...">
+        </div>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-primary" (click)="btnSaveShopGroupClick()" id="btnSaveShopGroup">
+        <fa name="save"></fa> Save
+      </button>
+      <button type="button" class="btn btn-danger" (click)="shopGroupModalRef.hide()" id="btnCloseShopGroupModal">
+        <fa name="close"></fa> Close
+      </button>
+    </div>
+  </ng-template>
+
+  <!-- Shop group delete modal -->
+  <ng-template #shopGroupDeleteModalTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        Delete
+      </h4>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to delete this group
+      <b>
+        {{
+        listShopGroupCollectionView.items.length > 0 ?
+        listShopGroupCollectionView.currentItem.ShopGroup : 'NA'
+        }}
+      </b>?
+    </div>
+    <div class="modal-footer">
+      <button type="button" [hidden]="isDeleteButtonHide" class="btn btn-danger" style="margin-right: 5px;" (click)="btnConfirmDeleteShopGroupClick()"
+        id="btnConfirmDeleteShopGroup">
+        <fa name="trash"></fa> Delete
+      </button>
+      <button type="button" class="btn" (click)="shopGroupDeleteModalRef.hide()" id="btnCloseConfirmDeleteShopGroupModal">
+        <fa name="close"></fa> Cancel
+      </button>
+    </div>
+  </ng-template>
 </div>
-
-<!-- Shop group modal -->
-<ng-template #shopGroupModalTemplate>
-  <div class="modal-header">
-    <h5 class="modal-title" id="shopGroupModalLabel">{{ shopGroupModalTitle }}</h5>
-    <button type="button" class="close" (click)="shopGroupModalRef.hide()" aria-label="Close">
-      <span aria-hidden="true">&times;</span>
-    </button>
-  </div>
-  <div class="modal-body">
-    <div class="form-group row">
-      <label for="inpShopGroupCode" class="col-sm-3 col-form-label form-group-label">Code</label>
-      <div class="col-sm-9">
-        <input type="text" [(ngModel)]="mstShopGroup.ShopGroupCode" class="form-control" id="inpShopGroupCode"
-          placeholder="Code...">
-      </div>
-      <br /><br />
-      <label for="inpShopGroupName" class="col-sm-3 col-form-label form-group-label">Group</label>
-      <div class="col-sm-9">
-        <input type="text" [(ngModel)]="mstShopGroup.ShopGroup" class="form-control" id="inpShopGroupName"
-          placeholder="Group Name...">
-      </div>
-    </div>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-primary" (click)="btnSaveShopGroupClick()" id="btnSaveShopGroup">
-      <fa name="save"></fa> Save
-    </button>
-    <button type="button" class="btn btn-danger" (click)="shopGroupModalRef.hide()" id="btnCloseShopGroupModal">
-      <fa name="close"></fa> Close
-    </button>
-  </div>
-</ng-template>
-
-<!-- Shop group delete modal -->
-<ng-template #shopGroupDeleteModalTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">
-      Delete
-    </h4>
-  </div>
-  <div class="modal-body">
-    Are you sure you want to delete this group
-    <b>
-      {{
-      listShopGroupCollectionView.items.length > 0 ?
-      listShopGroupCollectionView.currentItem.ShopGroup : 'NA'
-      }}
-    </b>?
-  </div>
-  <div class="modal-footer">
-    <button type="button" [hidden]="isDeleteButtonHide" class="btn btn-danger" style="margin-right: 5px;" (click)="btnConfirmDeleteShopGroupClick()"
-      id="btnConfirmDeleteShopGroup">
-      <fa name="trash"></fa> Delete
-    </button>
-    <button type="button" class="btn" (click)="shopGroupDeleteModalRef.hide()" id="btnCloseConfirmDeleteShopGroupModal">
-      <fa name="close"></fa> Cancel
-    </button>
-  </div>
-</ng-template>

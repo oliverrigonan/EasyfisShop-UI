@@ -1,220 +1,229 @@
-<div class="card card-default">
-  <!-- Header -->
-  <div class="card-header">
-    <table border="0" style="width: 100%; border: none;">
-      <tr>
-        <td>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>
-                  <fa name="table"></fa>
-                </b>
-              </div>
-            </div>
-            <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
-              [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
-              style="width: 140px;">
-            </wj-combo-box>
-            &nbsp;
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>Start</b>
-              </div>
-            </div>
-            <wj-input-date #cboShopOrderStartDateFilter [(ngModel)]="shopOrderStartDateFilterData" [ngModelOptions]="{standalone: true}"
-              (textChanged)="startDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
-            </wj-input-date>
-            &nbsp;
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>End</b>
-              </div>
-            </div>
-            <wj-input-date #cboShopOrderEndDateFilter [(ngModel)]="shopOrderEndDateFilterData" [ngModelOptions]="{standalone: true}"
-              (textChanged)="endDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
-            </wj-input-date>
-          </div>
-
-        </td>
-        <td style="text-align: right;">
-          <button class="btn btn-primary" style="margin-right: 5px;" (click)="btnImportShopOrderClick()">
-            <fa name="download"></fa> Import
-          </button>
-          <button class="btn btn-primary" style="margin-right: 5px;" (click)="btnAddShopOrderClick()" id="btnAddShopOrder">
-            <fa name="plus"></fa> Add
-          </button>
-          <button class="btn btn-danger" routerLink="/software">
-            <fa name="close"></fa> Close
-          </button>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Header (Date Range) -->
-  <div class="card-header">
-    <table border="0" style="width: 100%; border: none;">
-      <tr>
-        <td>
-          <div class="input-group">
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>Group</b>
-              </div>
-            </div>
-            <wj-combo-box #cboShopGroup [itemsSource]="cboShopGroupObservableArray" [isEditable]="false" [isRequired]="true"
-              [displayMemberPath]="'ShopGroup'" [selectedValuePath]="'Id'" (selectedIndexChanged)="cboShopGroupSelectedIndexChanged()"
-              style="width: 227px;">
-            </wj-combo-box>
-            &nbsp;
-            <div class="input-group-prepend">
-              <div class="input-group-text">
-                <b>Status</b>
-              </div>
-            </div>
-            <wj-combo-box #cboShopOrderStatus [itemsSource]="cboShopOrderStatusObservableArray" [isEditable]="false"
-              [isRequired]="true" [displayMemberPath]="'ShopOrderStatus'" [selectedValuePath]="'Id'"
-              (selectedIndexChanged)="cboShopOrderStatusSelectedIndexChanged()" style="width: 227px;">
-            </wj-combo-box>
-          </div>
-        </td>
-      </tr>
-    </table>
-  </div>
-
-  <!-- Flexgrid -->
-  <div class="card-body">
-    <wj-flex-grid #listShopOrderFlexGrid [itemsSource]="listShopOrderCollectionView" [selectionMode]="3"
-      [frozenColumns]="2">
-      <wj-flex-grid-filter></wj-flex-grid-filter>
-      <wj-flex-grid-column [header]="Edit" [isReadOnly]="true" [width]="80">
-        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
-          <button type="button" class="btn btn-primary btn-block btn-xs" (click)="btnEditShopOrderClick()" id="btnEditShopOrder">
-            <fa name="edit"></fa> Edit
-          </button>
-        </ng-template>
-      </wj-flex-grid-column>
-      <wj-flex-grid-column [header]="Delete" [isReadOnly]="true" [width]="90">
-        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
-          <button type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopOrderClick(shopOrderDeleteModalTemplate)"
-            id="btnDeleteShopOrder">
-            <fa name="trash"></fa> Delete
-          </button>
-        </ng-template>
-      </wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Date'" [binding]="'SPDate'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Order No.'" [binding]="'SPNumber'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Item'" [binding]="'Item'" [isReadOnly]="true" [width]="'2*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Quantity'" [binding]="'Quantity'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Amount'" [binding]="'Amount'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'Particulars'" [binding]="'Particulars'" [isReadOnly]="true" [width]="'1.5*'"></wj-flex-grid-column>
-      <wj-flex-grid-column [header]="'L'" [binding]="'IsLocked'" [isReadOnly]="true" [width]="'0.4*'"></wj-flex-grid-column>
-    </wj-flex-grid>
-  </div>
-
-  <!-- Navigation flexgrid -->
-  <div class="card-footer">
-    <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
-      <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToFirstPage()">
-        <fa name="fast-backward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToPreviousPage()">
-        <fa name="step-backward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" disabled style="width:100px">
-        {{ listShopOrderCollectionView.pageIndex + 1 }} / {{ listShopOrderCollectionView.pageCount }}
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToNextPage()">
-        <fa name="step-forward"></fa>
-      </button>
-      <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToLastPage()">
-        <fa name="fast-forward"></fa>
-      </button>
-    </div>
-  </div>
+<div [hidden]="isLoadingSpinnerHidden">
+  <br /><br /><br />
+  <mat-spinner style="margin: auto;"></mat-spinner>
 </div>
+<div [hidden]="isContentHidden">
+  <div class="card card-default">
+    <!-- Header -->
+    <div class="card-header">
+      <table border="0" style="width: 100%; border: none;">
+        <tr>
+          <td>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>
+                    <fa name="table"></fa>
+                  </b>
+                </div>
+              </div>
+              <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
+                [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
+                style="width: 140px;">
+              </wj-combo-box>
+              &nbsp;
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>Start</b>
+                </div>
+              </div>
+              <wj-input-date #cboShopOrderStartDateFilter [(ngModel)]="shopOrderStartDateFilterData" [ngModelOptions]="{standalone: true}"
+                (textChanged)="startDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
+              </wj-input-date>
+              &nbsp;
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>End</b>
+                </div>
+              </div>
+              <wj-input-date #cboShopOrderEndDateFilter [(ngModel)]="shopOrderEndDateFilterData" [ngModelOptions]="{standalone: true}"
+                (textChanged)="endDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
+              </wj-input-date>
+            </div>
 
-<!-- User stamp -->
-<div class="card card-default" style="margin-top: 10px;">
-  <div class="card-header">
-    User stamp
-  </div>
-  <div class="card-body">
-    <div class="row">
-      <div class="col-md-6">
-        <p>Created by:</p>
-        <div style="padding-left: 10px;">
-          <fa name="key"></fa>&nbsp;
-          <label id="createdBy">
-            {{
-            listShopOrderCollectionView.items.length > 0 ?
-            listShopOrderCollectionView.currentItem.CreatedBy : 'NA'
-            }}
-          </label>
-          <br />
-          <small>
-            <fa name="calendar"></fa>&nbsp;&nbsp;
-            <span id="createdDate">
-              {{
-              listShopOrderCollectionView.items.length > 0 ?
-              listShopOrderCollectionView.currentItem.CreatedDateTime : 'mm/dd/yyyy'
-              }}
-            </span>
-          </small>
-        </div>
-        <br />
-      </div>
-      <div class="col-md-6">
-        <p>Updated by:</p>
-        <div style="padding-left: 10px;">
-          <fa name="key"></fa>&nbsp;
-          <label id="updatedBy">
-            {{
-            listShopOrderCollectionView.items.length > 0 ?
-            listShopOrderCollectionView.currentItem.UpdatedBy : 'NA'
-            }}
-          </label>
-          <br />
-          <small>
-            <fa name="calendar"></fa>&nbsp;&nbsp;
-            <span id="updatedDate">
-              {{
-              listShopOrderCollectionView.items.length > 0 ?
-              listShopOrderCollectionView.currentItem.UpdatedDateTime : 'mm/dd/yyyy'
-              }}
-            </span>
-          </small>
-        </div>
-        <br />
+          </td>
+          <td style="text-align: right;">
+            <button class="btn btn-primary" [hidden]="isAddButtonHide" style="margin-right: 5px;" (click)="btnImportShopOrderClick()">
+              <fa name="download"></fa> Import
+            </button>
+            <button class="btn btn-primary" [hidden]="isAddButtonHide" style="margin-right: 5px;" (click)="btnAddShopOrderClick()"
+              id="btnAddShopOrder">
+              <fa name="plus"></fa> Add
+            </button>
+            <button class="btn btn-danger" routerLink="/software">
+              <fa name="close"></fa> Close
+            </button>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Header (Date Range) -->
+    <div class="card-header">
+      <table border="0" style="width: 100%; border: none;">
+        <tr>
+          <td>
+            <div class="input-group">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>Group</b>
+                </div>
+              </div>
+              <wj-combo-box #cboShopGroup [itemsSource]="cboShopGroupObservableArray" [isEditable]="false" [isRequired]="true"
+                [displayMemberPath]="'ShopGroup'" [selectedValuePath]="'Id'" (selectedIndexChanged)="cboShopGroupSelectedIndexChanged()"
+                style="width: 227px;">
+              </wj-combo-box>
+              &nbsp;
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <b>Status</b>
+                </div>
+              </div>
+              <wj-combo-box #cboShopOrderStatus [itemsSource]="cboShopOrderStatusObservableArray" [isEditable]="false"
+                [isRequired]="true" [displayMemberPath]="'ShopOrderStatus'" [selectedValuePath]="'Id'"
+                (selectedIndexChanged)="cboShopOrderStatusSelectedIndexChanged()" style="width: 227px;">
+              </wj-combo-box>
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+
+    <!-- Flexgrid -->
+    <div class="card-body">
+      <mat-progress-bar [hidden]="isProgressBarHidden" [color]="'primary'" [mode]="'indeterminate'"></mat-progress-bar>
+      <wj-flex-grid #listShopOrderFlexGrid [itemsSource]="listShopOrderCollectionView" [selectionMode]="3"
+        [frozenColumns]="2">
+        <wj-flex-grid-filter></wj-flex-grid-filter>
+        <wj-flex-grid-column *ngIf="isShowEditColumn" [header]="Edit" [isReadOnly]="true" [width]="80">
+          <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+            <button [hidden]="isEditButtonHide" type="button" class="btn btn-primary btn-block btn-xs" (click)="btnEditShopOrderClick()"
+              id="btnEditShopOrder">
+              <fa name="edit"></fa> Edit
+            </button>
+          </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column *ngIf="isShowDeleteColumn" [header]="Delete" [isReadOnly]="true" [width]="90">
+          <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+            <button [hidden]="isDeleteButtonHide" type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopOrderClick(shopOrderDeleteModalTemplate)"
+              id="btnDeleteShopOrder">
+              <fa name="trash"></fa> Delete
+            </button>
+          </ng-template>
+        </wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Date'" [binding]="'SPDate'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Order No.'" [binding]="'SPNumber'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Item'" [binding]="'Item'" [isReadOnly]="true" [width]="'2*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Quantity'" [binding]="'Quantity'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Amount'" [binding]="'Amount'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'Particulars'" [binding]="'Particulars'" [isReadOnly]="true" [width]="'1.5*'"></wj-flex-grid-column>
+        <wj-flex-grid-column [header]="'L'" [binding]="'IsLocked'" [isReadOnly]="true" [width]="'0.4*'"></wj-flex-grid-column>
+      </wj-flex-grid>
+    </div>
+
+    <!-- Navigation flexgrid -->
+    <div class="card-footer">
+      <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
+        <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToFirstPage()">
+          <fa name="fast-backward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToPreviousPage()">
+          <fa name="step-backward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" disabled style="width:100px">
+          {{ listShopOrderCollectionView.pageIndex + 1 }} / {{ listShopOrderCollectionView.pageCount }}
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToNextPage()">
+          <fa name="step-forward"></fa>
+        </button>
+        <button type="button" class="btn btn-secondary" (click)="listShopOrderCollectionView.moveToLastPage()">
+          <fa name="fast-forward"></fa>
+        </button>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Shop order delete modal -->
-<ng-template #shopOrderDeleteModalTemplate>
-  <div class="modal-header">
-    <h4 class="modal-title">
-      Delete
-    </h4>
+  <!-- User stamp -->
+  <div class="card card-default" style="margin-top: 10px;">
+    <div class="card-header">
+      User stamp
+    </div>
+    <div class="card-body">
+      <div class="row">
+        <div class="col-md-6">
+          <p>Created by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;
+            <label id="createdBy">
+              {{
+              listShopOrderCollectionView.items.length > 0 ?
+              listShopOrderCollectionView.currentItem.CreatedBy : 'NA'
+              }}
+            </label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;
+              <span id="createdDate">
+                {{
+                listShopOrderCollectionView.items.length > 0 ?
+                listShopOrderCollectionView.currentItem.CreatedDateTime : 'mm/dd/yyyy'
+                }}
+              </span>
+            </small>
+          </div>
+          <br />
+        </div>
+        <div class="col-md-6">
+          <p>Updated by:</p>
+          <div style="padding-left: 10px;">
+            <fa name="key"></fa>&nbsp;
+            <label id="updatedBy">
+              {{
+              listShopOrderCollectionView.items.length > 0 ?
+              listShopOrderCollectionView.currentItem.UpdatedBy : 'NA'
+              }}
+            </label>
+            <br />
+            <small>
+              <fa name="calendar"></fa>&nbsp;&nbsp;
+              <span id="updatedDate">
+                {{
+                listShopOrderCollectionView.items.length > 0 ?
+                listShopOrderCollectionView.currentItem.UpdatedDateTime : 'mm/dd/yyyy'
+                }}
+              </span>
+            </small>
+          </div>
+          <br />
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="modal-body">
-    Are you sure you want to delete this order number:
-    <b>
-      {{
-      listShopOrderCollectionView.items.length > 0 ?
-      listShopOrderCollectionView.currentItem.SPNumber : 'NA'
-      }}
-    </b>?
-  </div>
-  <div class="modal-footer">
-    <button type="button" [hidden]="isDeleteButtonHide" class="btn btn-danger" style="margin-right: 5px;" (click)="btnConfirmDeleteShopOrderStatusClick()"
-      id="btnConfirmDeleteShopOrder">
-      <fa name="trash"></fa> Delete
-    </button>
-    <button type="button" class="btn" (click)="shopOrderDeleteModalRef.hide()" id="btnCloseConfirmDeleteShopOrderModal">
-      <fa name="close"></fa> Cancel
-    </button>
-  </div>
-</ng-template>
+
+  <!-- Shop order delete modal -->
+  <ng-template #shopOrderDeleteModalTemplate>
+    <div class="modal-header">
+      <h4 class="modal-title">
+        Delete
+      </h4>
+    </div>
+    <div class="modal-body">
+      Are you sure you want to delete this order number:
+      <b>
+        {{
+        listShopOrderCollectionView.items.length > 0 ?
+        listShopOrderCollectionView.currentItem.SPNumber : 'NA'
+        }}
+      </b>?
+    </div>
+    <div class="modal-footer">
+      <button type="button" [hidden]="isDeleteButtonHide" class="btn btn-danger" style="margin-right: 5px;" (click)="btnConfirmDeleteShopOrderStatusClick()"
+        id="btnConfirmDeleteShopOrder">
+        <fa name="trash"></fa> Delete
+      </button>
+      <button type="button" class="btn" (click)="shopOrderDeleteModalRef.hide()" id="btnCloseConfirmDeleteShopOrderModal">
+        <fa name="close"></fa> Cancel
+      </button>
+    </div>
+  </ng-template>
+</div>

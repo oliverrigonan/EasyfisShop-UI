@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ObservableArray, CollectionView } from 'wijmo/wijmo';
 import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
@@ -12,6 +11,9 @@ import { TrnShopOrderListService } from './trn-shop-order-list.service'
 
 import { ToastrService } from 'ngx-toastr';
 
+import { SoftwareUserFormService } from '../software-user-form.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-trn-shop-order-list',
   templateUrl: './trn-shop-order-list.component.html',
@@ -22,6 +24,7 @@ export class TrnShopOrderListComponent implements OnInit {
     private trnShopOrderListService: TrnShopOrderListService,
     private modalService: BsModalService,
     private toastr: ToastrService,
+    private softwareUserFormService: SoftwareUserFormService,
     private router: Router
   ) { }
 
@@ -47,6 +50,19 @@ export class TrnShopOrderListComponent implements OnInit {
   public addShopOrderSubscription: any;
   public deleteShopOrderSubscription: any;
   public shopOrderDeleteModalRef: BsModalRef;
+
+  public getUserFormsSubscription: any;
+  public isLoadingSpinnerHidden: boolean = false;
+  public isContentHidden: boolean = true;
+
+  public isAddButtonHide: boolean = true;
+  public isEditButtonHide: boolean = true;
+  public isDeleteButtonHide: boolean = true;
+
+  public isShowEditColumn: boolean = false;
+  public isShowDeleteColumn: boolean = false;
+
+  public isProgressBarHidden = false;
 
   // Combo box for number of rows
   public createCboShowNumberOfRows(): void {
@@ -76,8 +92,6 @@ export class TrnShopOrderListComponent implements OnInit {
         rowString: rowsString
       });
     }
-
-    this.createCboShopGroup();
   }
 
   public cboShowNumberOfRowsOnSelectedIndexChanged(selectedValue: any): void {
@@ -206,6 +220,8 @@ export class TrnShopOrderListComponent implements OnInit {
       shopOrderStatusId = this.cboShopOrderStatus.selectedValue;
     }
 
+    this.isProgressBarHidden = false;
+
     if (shopGroupId != 0 && shopOrderStatusId != 0) {
       this.trnShopOrderListService.listShopOrder(startDate, endDate, shopGroupId, shopOrderStatusId);
       this.listShopOrderSubscription = this.trnShopOrderListService.listShopOrderObservable.subscribe(
@@ -221,10 +237,12 @@ export class TrnShopOrderListComponent implements OnInit {
 
           this.isDataLoaded = true;
 
+          this.isProgressBarHidden = true;
           if (this.listShopOrderSubscription != null) this.listShopOrderSubscription.unsubscribe();
         }
       );
     } else {
+      this.isProgressBarHidden = true;
       this.toastr.error("Invalid filters.", "Error");
     }
   }
@@ -305,6 +323,41 @@ export class TrnShopOrderListComponent implements OnInit {
   // On page load
   ngOnInit() {
     this.createCboShowNumberOfRows();
+    setTimeout(() => {
+      this.softwareUserFormService.getCurrentForm("ShopOrderList");
+      this.getUserFormsSubscription = this.softwareUserFormService.getCurrentUserFormsObservable.subscribe(
+        data => {
+          if (data != null) {
+            this.isLoadingSpinnerHidden = true;
+            this.isContentHidden = false;
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanEdit) {
+              this.isEditButtonHide = false;
+              this.isShowEditColumn = true;
+            }
+
+            if (data.CanDelete) {
+              this.isDeleteButtonHide = false;
+              this.isShowDeleteColumn = true;
+            }
+
+            this.createCboShopGroup();
+          } else {
+            this.router.navigateByUrl("/software/err-forbidden", { skipLocationChange: true });
+          }
+
+          if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
+        }
+      );
+    }, 1000);
   }
 
   // On page destroy
@@ -314,5 +367,6 @@ export class TrnShopOrderListComponent implements OnInit {
     if (this.listShopOrderSubscription != null) this.listShopOrderSubscription.unsubscribe();
     if (this.addShopOrderSubscription != null) this.addShopOrderSubscription.unsubscribe();
     if (this.deleteShopOrderSubscription != null) this.deleteShopOrderSubscription.unsubscribe();
+    if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
   }
 }

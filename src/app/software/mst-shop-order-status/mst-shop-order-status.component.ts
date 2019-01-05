@@ -11,6 +11,9 @@ import { MstShopOrderStatusModel } from './mst-shop-order-status.model';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { SoftwareUserFormService } from '../software-user-form.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-mst-shop-order-status',
   templateUrl: './mst-shop-order-status.component.html',
@@ -20,7 +23,9 @@ export class MstShopOrderStatusComponent implements OnInit {
   constructor(
     private mstShopOrderStatusService: MstShopOrderStatusService,
     private modalService: BsModalService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private softwareUserFormService: SoftwareUserFormService,
+    private router: Router
   ) { }
 
   public cboShowNumberOfRows: ObservableArray = new ObservableArray();
@@ -44,6 +49,19 @@ export class MstShopOrderStatusComponent implements OnInit {
   public shopOrderStatusModalRef: BsModalRef;
 
   public shopOrderStatusDeleteModalRef: BsModalRef;
+
+  public getUserFormsSubscription: any;
+  public isLoadingSpinnerHidden: boolean = false;
+  public isContentHidden: boolean = true;
+
+  public isAddButtonHide: boolean = true;
+  public isEditButtonHide: boolean = true;
+  public isDeleteButtonHide: boolean = true;
+
+  public isShowEditColumn: boolean = false;
+  public isShowDeleteColumn: boolean = false;
+
+  public isProgressBarHidden = false;
 
   // Combo box for number of rows
   public createCboShowNumberOfRows(): void {
@@ -73,8 +91,6 @@ export class MstShopOrderStatusComponent implements OnInit {
         rowString: rowsString
       });
     }
-
-    this.listShopOrderStatus();
   }
 
   public cboShowNumberOfRowsOnSelectedIndexChanged(selectedValue: any): void {
@@ -94,6 +110,8 @@ export class MstShopOrderStatusComponent implements OnInit {
     this.listShopOrderStatusCollectionView.refresh();
     this.listShopOrderStatusFlexGrid.refresh();
 
+    this.isProgressBarHidden = false;
+
     this.mstShopOrderStatusService.listShopOrderStatus();
     this.listShopOrderStatusSubscription = this.mstShopOrderStatusService.listShopOrderStatusObservable.subscribe(
       data => {
@@ -106,6 +124,7 @@ export class MstShopOrderStatusComponent implements OnInit {
           this.listShopOrderStatusFlexGrid.refresh();
         }
 
+        this.isProgressBarHidden = true;
         if (this.listShopOrderStatusSubscription != null) this.listShopOrderStatusSubscription.unsubscribe();
       }
     );
@@ -229,6 +248,41 @@ export class MstShopOrderStatusComponent implements OnInit {
   // On page load
   ngOnInit() {
     this.createCboShowNumberOfRows();
+    setTimeout(() => {
+      this.softwareUserFormService.getCurrentForm("ShopOrderStatusList");
+      this.getUserFormsSubscription = this.softwareUserFormService.getCurrentUserFormsObservable.subscribe(
+        data => {
+          if (data != null) {
+            this.isLoadingSpinnerHidden = true;
+            this.isContentHidden = false;
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanEdit) {
+              this.isEditButtonHide = false;
+              this.isShowEditColumn = true;
+            }
+
+            if (data.CanDelete) {
+              this.isDeleteButtonHide = false;
+              this.isShowDeleteColumn = true;
+            }
+
+            this.listShopOrderStatus();
+          } else {
+            this.router.navigateByUrl("/software/err-forbidden", { skipLocationChange: true });
+          }
+
+          if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
+        }
+      );
+    }, 1000);
   }
 
   // On page destroy
@@ -236,5 +290,6 @@ export class MstShopOrderStatusComponent implements OnInit {
     if (this.listShopOrderStatusSubscription != null) this.listShopOrderStatusSubscription.unsubscribe();
     if (this.saveShopOrderStatusSubscription != null) this.saveShopOrderStatusSubscription.unsubscribe();
     if (this.deleteShopOrderStatusSubscription != null) this.deleteShopOrderStatusSubscription.unsubscribe();
+    if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
   }
 }

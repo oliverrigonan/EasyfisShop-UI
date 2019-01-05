@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router, ActivatedRoute } from '@angular/router';
 
 import { ObservableArray, CollectionView } from 'wijmo/wijmo';
 import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
@@ -14,6 +13,9 @@ import { TrnShopOrderLineModel } from './trn-shop-order-line.model';
 
 import { ToastrService } from 'ngx-toastr';
 
+import { SoftwareUserFormService } from '../software-user-form.service';
+import { Router, ActivatedRoute } from '@angular/router';
+
 @Component({
   selector: 'app-trn-shop-order-detail',
   templateUrl: './trn-shop-order-detail.component.html',
@@ -25,6 +27,8 @@ export class TrnShopOrderDetailComponent implements OnInit {
     private modalService: BsModalService,
     private toastr: ToastrService,
     private activatedRoute: ActivatedRoute,
+    private softwareUserFormService: SoftwareUserFormService,
+    private router: Router
   ) { }
 
   public trnShopOrderDetailModel: TrnShopOrderDetailModel = {
@@ -87,6 +91,21 @@ export class TrnShopOrderDetailComponent implements OnInit {
     Activity: "",
     User: ""
   };
+
+  public getUserFormsSubscription: any;
+  public isLoadingSpinnerHidden: boolean = false;
+  public isContentHidden: boolean = true;
+
+  public isAddButtonHide: boolean = true;
+  public isEditButtonHide: boolean = true;
+  public isDeleteButtonHide: boolean = true;
+  public isLockButtonHide: boolean = true;
+  public isUnlockButtonHide: boolean = true;
+
+  public isShowEditColumn: boolean = false;
+  public isShowDeleteColumn: boolean = false;
+
+  public isProgressBarHidden = false;
 
   // Create combo box item
   public createCboItem(): void {
@@ -317,6 +336,8 @@ export class TrnShopOrderDetailComponent implements OnInit {
     let id: number = 0;
     this.activatedRoute.params.subscribe(params => { id = params["id"]; });
 
+    this.isProgressBarHidden = false;
+
     this.trnShopOrderDetailService.listShopOrderLine(id.toString());
     this.listShopOrderLineSubscription = this.trnShopOrderDetailService.listShopOrderLineObservable.subscribe(
       data => {
@@ -329,6 +350,7 @@ export class TrnShopOrderDetailComponent implements OnInit {
           this.listShopOrderLineFlexGrid.refresh();
         }
 
+        this.isProgressBarHidden = true;
         if (this.listShopOrderLineSubscription != null) this.listShopOrderLineSubscription.unsubscribe();
       }
     );
@@ -452,8 +474,50 @@ export class TrnShopOrderDetailComponent implements OnInit {
 
   // On page load
   ngOnInit() {
-    this.createCboItem();
     this.createCboShowNumberOfRows();
+    setTimeout(() => {
+      this.softwareUserFormService.getCurrentForm("ShopOrderDetail");
+      this.getUserFormsSubscription = this.softwareUserFormService.getCurrentUserFormsObservable.subscribe(
+        data => {
+          if (data != null) {
+            this.isLoadingSpinnerHidden = true;
+            this.isContentHidden = false;
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanAdd) {
+              this.isAddButtonHide = false;
+            }
+
+            if (data.CanEdit) {
+              this.isEditButtonHide = false;
+              this.isShowEditColumn = true;
+            }
+
+            if (data.CanLock) {
+              this.isLockButtonHide = false;
+            }
+
+            if (data.CanUnlock) {
+              this.isUnlockButtonHide = false;
+            }
+
+            if (data.CanDelete) {
+              this.isDeleteButtonHide = false;
+              this.isShowDeleteColumn = true;
+            }
+
+            this.createCboItem();
+          } else {
+            this.router.navigateByUrl("/software/err-forbidden", { skipLocationChange: true });
+          }
+
+          if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
+        }
+      );
+    }, 1000);
   }
 
   // On page destroy
@@ -467,5 +531,6 @@ export class TrnShopOrderDetailComponent implements OnInit {
     if (this.listShopOrderLineSubscription != null) this.listShopOrderLineSubscription.unsubscribe();
     if (this.saveShopOrderLineSubscription != null) this.saveShopOrderLineSubscription.unsubscribe();
     if (this.deleteShopOrderLineSubscription != null) this.deleteShopOrderLineSubscription.unsubscribe();
+    if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
   }
 }

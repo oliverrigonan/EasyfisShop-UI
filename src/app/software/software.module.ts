@@ -15,9 +15,12 @@ import { TrnShopOrderDetailComponent } from './trn-shop-order-detail/trn-shop-or
 import { RepOrderSummaryReportComponent } from './rep-order-summary-report/rep-order-summary-report.component';
 import { SysSoftwareLayoutComponent } from './sys-software-layout/sys-software-layout.component';
 import { SysDashboardComponent } from './sys-dashboard/sys-dashboard.component';
+import { ErrForbiddenComponent } from './err-forbidden/err-forbidden.component';
 
 // Material
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 // Font Awesome
 import { AngularFontAwesomeModule } from 'angular-font-awesome';
@@ -38,7 +41,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     TrnShopOrderDetailComponent,
     TrnShopOrderListComponent,
     SysSoftwareLayoutComponent,
-    SysDashboardComponent
+    SysDashboardComponent,
+    ErrForbiddenComponent
   ],
   imports: [
     CommonModule,
@@ -47,6 +51,8 @@ import { ModalModule } from 'ngx-bootstrap/modal';
     SoftwareRoutingModule,
     AngularFontAwesomeModule,
     MatSidenavModule,
+    MatProgressBarModule,
+    MatProgressSpinnerModule,
     WjGridFilterModule,
     WjGridModule,
     WjInputModule,

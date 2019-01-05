@@ -8,6 +8,7 @@ import { TrnShopOrderDetailComponent } from './trn-shop-order-detail/trn-shop-or
 import { RepOrderSummaryReportComponent } from './rep-order-summary-report/rep-order-summary-report.component';
 import { SysSoftwareLayoutComponent } from './sys-software-layout/sys-software-layout.component';
 import { SysDashboardComponent } from './sys-dashboard/sys-dashboard.component';
+import { ErrForbiddenComponent } from './err-forbidden/err-forbidden.component';
 
 import { SoftwareRouterActivate } from './software.router.activate';
 
@@ -21,7 +22,8 @@ const routes: Routes = [
       { path: 'mst-shop-group', component: MstShopGroupComponent, canActivate: [SoftwareRouterActivate] },
       { path: 'trn-shop-order-list', component: TrnShopOrderListComponent, canActivate: [SoftwareRouterActivate] },
       { path: 'trn-shop-order-detail/:id', component: TrnShopOrderDetailComponent, canActivate: [SoftwareRouterActivate] },
-      { path: 'rep-order-summary-report', component: RepOrderSummaryReportComponent, canActivate: [SoftwareRouterActivate] }
+      { path: 'rep-order-summary-report', component: RepOrderSummaryReportComponent, canActivate: [SoftwareRouterActivate] },
+      { path: 'err-forbidden', component: ErrForbiddenComponent, canActivate: [SoftwareRouterActivate] }
     ]
   },
 ];

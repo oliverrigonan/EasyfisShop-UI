@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, TemplateRef } from '@angular/core';
-import { Router } from '@angular/router';
 
 import { ObservableArray, CollectionView } from 'wijmo/wijmo';
 import { WjFlexGrid } from 'wijmo/wijmo.angular2.grid';
@@ -11,6 +10,9 @@ import { ToastrService } from 'ngx-toastr';
 
 import { Angular5Csv } from 'angular5-csv/Angular5-csv';
 
+import { SoftwareUserFormService } from '../software-user-form.service';
+import { Router } from '@angular/router';
+
 @Component({
   selector: 'app-rep-order-summary-report',
   templateUrl: './rep-order-summary-report.component.html',
@@ -20,6 +22,7 @@ export class RepOrderSummaryReportComponent implements OnInit {
   constructor(
     private repOrderSummaryReportService: RepOrderSummaryReportService,
     private toastr: ToastrService,
+    private softwareUserFormService: SoftwareUserFormService,
     private router: Router
   ) { }
 
@@ -44,6 +47,12 @@ export class RepOrderSummaryReportComponent implements OnInit {
 
   public totalNumberOfOrders: string = "0.00";
   public totalAmount: string = "0.00";
+
+  public getUserFormsSubscription: any;
+  public isLoadingSpinnerHidden: boolean = false;
+  public isContentHidden: boolean = true;
+
+  public isProgressBarHidden = false;
 
   // Combo box for number of rows
   public createCboShowNumberOfRows(): void {
@@ -73,8 +82,6 @@ export class RepOrderSummaryReportComponent implements OnInit {
         rowString: rowsString
       });
     }
-
-    this.createCboShopGroup();
   }
 
   public cboShowNumberOfRowsOnSelectedIndexChanged(selectedValue: any): void {
@@ -203,6 +210,8 @@ export class RepOrderSummaryReportComponent implements OnInit {
       shopOrderStatusId = this.cboOrderSummaryReportStatus.selectedValue;
     }
 
+    this.isProgressBarHidden = false;
+
     if (shopGroupId != 0 && shopOrderStatusId != 0) {
       this.repOrderSummaryReportService.listOrderSummaryReport(startDate, endDate, shopGroupId, shopOrderStatusId);
       this.listOrderSummaryReportSubscription = this.repOrderSummaryReportService.listOrderSummaryReportObservable.subscribe(
@@ -226,10 +235,13 @@ export class RepOrderSummaryReportComponent implements OnInit {
           }
 
           this.isDataLoaded = true;
+
+          this.isProgressBarHidden = true;
           if (this.listOrderSummaryReportSubscription != null) this.listOrderSummaryReportSubscription.unsubscribe();
         }
       );
     } else {
+      this.isProgressBarHidden = true;
       this.toastr.error("Invalid filters.", "Error");
     }
   }
@@ -281,6 +293,23 @@ export class RepOrderSummaryReportComponent implements OnInit {
   // On page load
   ngOnInit() {
     this.createCboShowNumberOfRows();
+    setTimeout(() => {
+      this.softwareUserFormService.getCurrentForm("ViewOrderSummaryReport");
+      this.getUserFormsSubscription = this.softwareUserFormService.getCurrentUserFormsObservable.subscribe(
+        data => {
+          if (data != null) {
+            this.isLoadingSpinnerHidden = true;
+            this.isContentHidden = false;
+
+            this.createCboShopGroup();
+          } else {
+            this.router.navigateByUrl("/software/err-forbidden", { skipLocationChange: true });
+          }
+
+          if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
+        }
+      );
+    }, 1000);
   }
 
   // On page destroy
@@ -288,5 +317,6 @@ export class RepOrderSummaryReportComponent implements OnInit {
     if (this.cboShopGroupSubscription != null) this.cboShopGroupSubscription.unsubscribe();
     if (this.cboOrderSummaryReportStatusSubscription != null) this.cboOrderSummaryReportStatusSubscription.unsubscribe();
     if (this.listOrderSummaryReportSubscription != null) this.listOrderSummaryReportSubscription.unsubscribe();
+    if (this.getUserFormsSubscription != null) this.getUserFormsSubscription.unsubscribe();
   }
 }
