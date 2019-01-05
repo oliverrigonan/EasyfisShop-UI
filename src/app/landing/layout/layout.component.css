@@ -1,3 +1,7 @@
+.navbar {
+    box-shadow: 0px 2px 3px 0px #a3a3a3;
+}
+
 .home-footer {
     position: absolute;
     bottom: 0;

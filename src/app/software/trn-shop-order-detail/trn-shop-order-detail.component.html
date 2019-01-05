@@ -1,3 +1,234 @@
-<p>
-  trn-shop-order-detail works!
-</p>
+<div class="card card-default">
+  <div class="card-header">
+    <table border="0" style="width: 100%; border: none;">
+      <tr>
+        <td style="text-align: right;">
+          <button class="btn btn-primary" style="margin-right: 5px;" [disabled]="isLocked" (click)="btnLockShopOrderClick()"
+            id="btnLockShopOrder">
+            <fa name="lock"></fa> Lock
+          </button>
+          <button class="btn btn-primary" style="margin-right: 5px;" [disabled]="isLocked ? false : true" (click)="btnUnlockShopOrderClick()"
+            id="btnUnlockShopOrder">
+            <fa name="unlock"></fa> Unlock
+          </button>
+          <button class="btn btn-danger" routerLink="/software/trn-shop-order-list">
+            <fa name="close"></fa> Close
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-lg-6">
+        <div class="form-group row">
+          <label for="" class="col-sm-3 col-form-label form-group-label">Branch</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" [(ngModel)]="trnShopOrderDetailModel.Branch" id="" placeholder="Branch..."
+              disabled>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Order No.</label>
+          <div class="col-sm-9">
+            <input type="text" class="form-control" [(ngModel)]="trnShopOrderDetailModel.SPNumber" id="" placeholder="SP Number..."
+              disabled>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Date</label>
+          <div class="col-sm-9">
+            <wj-input-date #cboShopOrderDate [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.SPDate" format="MM-dd-yyyy"
+              style="width: 200px; padding: 3px;">
+            </wj-input-date>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Item</label>
+          <div class="col-sm-9">
+            <wj-combo-box #cboShopOrderItem [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.ItemId"
+              [itemsSource]="cboItemObservableArray" [isEditable]="false" [isRequired]="true" [displayMemberPath]="'Item'"
+              [selectedValuePath]="'Id'" style="width: 100%; padding: 3px;">
+            </wj-combo-box>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Quantity</label>
+          <div class="col-sm-9">
+            <wj-input-number [isRequired]="false" [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.Quantity"
+              style="width: 200px; padding: 3px;" [placeholder]="'0.00'">
+            </wj-input-number>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Amount</label>
+          <div class="col-sm-9">
+            <wj-input-number [isRequired]="false" [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.Amount"
+              style="width: 200px; padding: 3px;" [placeholder]="'0.00'">
+            </wj-input-number>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Group</label>
+          <div class="col-sm-9">
+            <wj-combo-box #cboShopOrderShopGroup [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.ShopGroupId"
+              [itemsSource]="cboShopGroupObservableArray" [isEditable]="false" [isRequired]="true" [displayMemberPath]="'ShopGroup'"
+              [selectedValuePath]="'Id'" style="width: 100%; padding: 3px;">
+            </wj-combo-box>
+          </div>
+          <br /><br />
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="form-group row">
+          <label for="" class="col-sm-3 col-form-label form-group-label">Particulars</label>
+          <div class="col-sm-9">
+            <textarea type="text" class="form-control" style="resize: none" [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.Particulars"
+              id="" placeholder="Particulars..." rows="5"></textarea>
+          </div>
+          <br /><br /><br /><br /><br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Status</label>
+          <div class="col-sm-9">
+            <wj-combo-box #cboShopOrderShopOrderStatus [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.ShopOrderStatusId"
+              [itemsSource]="cboShopOrderStatusObservableArray" [isEditable]="false" [isRequired]="true"
+              [displayMemberPath]="'ShopOrderStatus'" [selectedValuePath]="'Id'" style="width: 100%; padding: 3px;">
+            </wj-combo-box>
+          </div>
+          <br /><br />
+          <label for="" class="col-sm-3 col-form-label form-group-label">Status Date</label>
+          <div class="col-sm-9">
+            <wj-input-date #cboShopOrderDate [disabled]="isLocked" [(ngModel)]="trnShopOrderDetailModel.ShopOrderStatusDate"
+              format="MM-dd-yyyy" style="width: 200px; padding: 3px;">
+            </wj-input-date>
+          </div>
+          <br /><br />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card card-default" style="margin-top: 10px;">
+  <ul class="list-group list-group-flush">
+    <li class="list-group-item">
+      <h5>
+        Order Lines
+      </h5>
+    </li>
+  </ul>
+
+  <!-- Header -->
+  <div class="card-header">
+    <table border="0" style="width: 100%; border: none;">
+      <tr>
+        <td>
+          <div class="input-group">
+            <div class="input-group-prepend">
+              <div class="input-group-text">
+                <b>
+                  <fa name="table"></fa>
+                </b>
+              </div>
+            </div>
+            <wj-combo-box #cboNumberOfRows [itemsSource]="cboShowNumberOfRows" [isEditable]="false" [isRequired]="true"
+              [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
+              style="width: 140px;">
+            </wj-combo-box>
+          </div>
+        </td>
+        <td style="text-align: right;">
+          <button class="btn btn-primary" [disabled]="isLocked" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, true)"
+            style="margin-right: 5px;" id="btnOpenShopGroupModal">
+            <fa name="plus"></fa> Add
+          </button>
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <!-- Flexgrid -->
+  <div class="card-body">
+    <wj-flex-grid #listShopGroupFlexGrid [itemsSource]="listShopGroupCollectionView" [selectionMode]="3"
+      [frozenColumns]="2">
+      <wj-flex-grid-filter></wj-flex-grid-filter>
+      <wj-flex-grid-column [header]="Edit" [isReadOnly]="true" [width]="80">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+          <button type="button" class="btn btn-primary btn-block btn-xs" (click)="btnOpenShopGroupModalClick(shopGroupModalTemplate, false)"
+            id="btnOpenShopGroupModal">
+            <fa name="edit"></fa> Edit
+          </button>
+        </ng-template>
+      </wj-flex-grid-column>
+      <wj-flex-grid-column [header]="Delete" [isReadOnly]="true" [width]="90">
+        <ng-template wjFlexGridCellTemplate [cellType]="'Cell'">
+          <button type="button" class="btn btn-danger btn-block btn-xs" (click)="btnDeleteShopGroupClick(shopGroupDeleteModalTemplate)"
+            id="btnDeleteShopGroup">
+            <fa name="trash"></fa> Delete
+          </button>
+        </ng-template>
+      </wj-flex-grid-column>
+      <wj-flex-grid-column [header]="''" [binding]="'ShopGroupCode'" [isReadOnly]="true" [width]="'1*'"></wj-flex-grid-column>
+      <wj-flex-grid-column [header]="''" [binding]="'ShopGroup'" [isReadOnly]="true" [width]="'3*'"></wj-flex-grid-column>
+    </wj-flex-grid>
+  </div>
+
+  <!-- Navigation flexgrid -->
+  <div class="card-footer">
+    <div class="col-sm-12 btn-group" style="padding: 5px 0px 5px 0px;">
+      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToFirstPage()">
+        <fa name="fast-backward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToPreviousPage()">
+        <fa name="step-backward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" disabled style="width:100px">
+        <!-- {{ listShopGroupCollectionView.pageIndex + 1 }} / {{ listShopGroupCollectionView.pageCount }} -->
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToNextPage()">
+        <fa name="step-forward"></fa>
+      </button>
+      <button type="button" class="btn btn-secondary" (click)="listShopGroupCollectionView.moveToLastPage()">
+        <fa name="fast-forward"></fa>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- User stamp -->
+<div class="card card-default" style="margin-top: 10px;">
+  <div class="card-header">
+    User stamp
+  </div>
+  <div class="card-body">
+    <div class="row">
+      <div class="col-md-6">
+        <p>Created by:</p>
+        <div style="padding-left: 10px;">
+          <fa name="key"></fa>&nbsp;
+          <label id="createdBy">
+            {{ trnShopOrderDetailModel.CreatedBy }}
+          </label>
+          <br />
+          <small>
+            <fa name="calendar"></fa>&nbsp;&nbsp;
+            <span id="createdDate">
+              {{ trnShopOrderDetailModel.CreatedDateTime }}
+            </span>
+          </small>
+        </div>
+        <br />
+      </div>
+      <div class="col-md-6">
+        <p>Updated by:</p>
+        <div style="padding-left: 10px;">
+          <fa name="key"></fa>&nbsp;
+          <label id="updatedBy">
+            {{ trnShopOrderDetailModel.UpdatedBy }}
+          </label>
+          <br />
+          <small>
+            <fa name="calendar"></fa>&nbsp;&nbsp;
+            <span id="updatedDate">
+              {{ trnShopOrderDetailModel.UpdatedDateTime }}
+            </span>
+          </small>
+        </div>
+        <br />
+      </div>
+    </div>
+  </div>
+</div>
