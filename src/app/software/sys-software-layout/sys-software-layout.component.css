@@ -52,3 +52,7 @@
 .toolbar-title-style {
     font-size: 18px;
 }
+
+.mat-drawer-container {
+    background-color: white !important;
+}
