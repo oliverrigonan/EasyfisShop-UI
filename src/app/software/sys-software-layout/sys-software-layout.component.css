@@ -1,5 +1,5 @@
 .navbar {
-    box-shadow: 0px 2px 3px 0px #a3a3a3;
+    box-shadow: 0px 2px 3px 0px #323232;
 }
 
 .navbar-space {
@@ -20,13 +20,23 @@
 
 .side-bar {
     width: 300px;
-    padding: 10px;
-    border-right: 1px solid #e6e6e6;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    /* background: transparent; */
+    background: linear-gradient( rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.8) ), url(../../../assets/img/bg/sidenavbg.jpg) no-repeat center center;
+    border-right: 1px solid #323232;
+}
+
+.list-group-item {
+    background: transparent;
+    color: white;
+    /* border: 1px solid rgb(59, 59, 59); */
+    border: none;
 }
 
 .list-group-item:hover {
-    background: #002b80;
-    transition: 1s all;
+    background: #7a0400;
+    /* transition: 1s all; */
     color: white;
 }
 
@@ -35,7 +45,7 @@
     width: 100%;
     padding-top: 5px;
     padding-bottom: 8px;
-    background-color: #002b80;
+    background-color: #000f2e;
     color: white;
 }
 
