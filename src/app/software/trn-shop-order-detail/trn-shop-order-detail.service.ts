@@ -4,6 +4,7 @@ import { AppSettings } from './../../app.settings';
 import { ObservableArray } from 'wijmo/wijmo';
 import { Subject } from 'rxjs';
 import { TrnShopOrderDetailModel } from './trn-shop-order-detail.model'
+import { TrnShopOrderLineModel } from './trn-shop-order-line.model'
 
 @Injectable({
   providedIn: 'root'
@@ -24,7 +25,6 @@ export class TrnShopOrderDetailService {
   public defaultAPIURLHost: string = this.appSettings.defaultAPIURLHost;
 
   // Subjects and Observables
-
   public listItemSource = new Subject<ObservableArray>();
   public listItemObservable = this.listItemSource.asObservable();
   public listUnitSource = new Subject<ObservableArray>();
@@ -39,6 +39,12 @@ export class TrnShopOrderDetailService {
   public lockShopOrderObservable = this.lockShopOrderSource.asObservable();
   public unlockShopOrderSource = new Subject<string[]>();
   public unlockShopOrderObservable = this.unlockShopOrderSource.asObservable();
+  public listShopOrderLineSource = new Subject<ObservableArray>();
+  public listShopOrderLineObservable = this.listShopOrderLineSource.asObservable();
+  public saveShopOrderLineSource = new Subject<string[]>();
+  public saveShopOrderLineObservable = this.saveShopOrderLineSource.asObservable();
+  public deleteShopOrderLineSource = new Subject<string[]>();
+  public deleteShopOrderLineObservable = this.deleteShopOrderLineSource.asObservable();
 
   // List item
   public listItem(): void {
@@ -195,5 +201,71 @@ export class TrnShopOrderDetailService {
         this.unlockShopOrderSource.next(errorResults);
       }
     );
+  }
+
+  // List shop order lime
+  public listShopOrderLine(SPId: string): void {
+    let listShopOrderLineObservableArray = new ObservableArray();
+    this.listShopOrderLineSource.next(listShopOrderLineObservableArray);
+
+    this.httpClient.get(this.defaultAPIURLHost + "/api/shopOrderLine/list/" + SPId, this.options).subscribe(
+      response => {
+        var results = response;
+        if (results["length"] > 0) {
+          for (var i = 0; i <= results["length"] - 1; i++) {
+            listShopOrderLineObservableArray.push({
+              Id: results[i].Id,
+              SPId: results[i].SPId,
+              ActivityDate: results[i].ActivityDate,
+              Activity: results[i].Activity,
+              User: results[i].User
+            });
+          }
+        }
+
+        this.listShopOrderLineSource.next(listShopOrderLineObservableArray);
+      }
+    );
+  }
+
+  // Save shop order line
+  public saveShopOrderLine(objShopOrderLine: TrnShopOrderLineModel): void {
+    if (objShopOrderLine.Id == 0) {
+      this.httpClient.post(this.defaultAPIURLHost + "/api/shopOrderLine/add", JSON.stringify(objShopOrderLine), this.options).subscribe(
+        response => {
+          let responseResults: string[] = ["success", ""];
+          this.saveShopOrderLineSource.next(responseResults);
+        },
+        error => {
+          let errorResults: string[] = ["failed", error["error"]];
+          this.saveShopOrderLineSource.next(errorResults);
+        }
+      )
+    } else {
+      this.httpClient.put(this.defaultAPIURLHost + "/api/shopOrderLine/update", JSON.stringify(objShopOrderLine), this.options).subscribe(
+        response => {
+          let responseResults: string[] = ["success", ""];
+          this.saveShopOrderLineSource.next(responseResults);
+        },
+        error => {
+          let errorResults: string[] = ["failed", error["error"]];
+          this.saveShopOrderLineSource.next(errorResults);
+        }
+      )
+    }
+  }
+
+  // Delete shop order line
+  public deleteShopOrderLine(id: number): void {
+    this.httpClient.delete(this.defaultAPIURLHost + "/api/shopOrderLine/delete?id=" + id, this.options).subscribe(
+      response => {
+        let responseResults: string[] = ["success", ""];
+        this.deleteShopOrderLineSource.next(responseResults);
+      },
+      error => {
+        let errorResults: string[] = ["failed", error["error"]];
+        this.deleteShopOrderLineSource.next(errorResults);
+      }
+    )
   }
 }

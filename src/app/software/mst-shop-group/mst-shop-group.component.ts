@@ -165,6 +165,9 @@ export class MstShopGroupComponent implements OnInit {
           } else if (data[0] == "failed") {
             this.toastr.error(data[1], "Error");
 
+            (<HTMLInputElement>inpShopGroupCode).disabled = false;
+            (<HTMLInputElement>inpShopGroupName).disabled = false;
+
             (<HTMLButtonElement>btnSaveShopGroup).disabled = false;
             (<HTMLButtonElement>btnCloseShopGroupModal).disabled = false;
           }

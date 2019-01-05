@@ -10,6 +10,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal/bs-modal-ref.service';
 
 import { TrnShopOrderDetailService } from './trn-shop-order-detail.service';
 import { TrnShopOrderDetailModel } from './trn-shop-order-detail.model';
+import { TrnShopOrderLineModel } from './trn-shop-order-line.model';
 
 import { ToastrService } from 'ngx-toastr';
 
@@ -60,6 +61,32 @@ export class TrnShopOrderDetailComponent implements OnInit {
   public unlockShopOrderSubscription: any;
 
   public isLocked: boolean = false;
+
+  public shopOrderLineModalRef: BsModalRef;
+  public shopOrderLineDeleteModalRef: BsModalRef;
+
+  public cboShowNumberOfRows: ObservableArray = new ObservableArray();
+
+  // Shop order line
+  public listShopOrderLineSubscription: any;
+  public listShopOrderLineObservableArray: ObservableArray = new ObservableArray();
+  public listShopOrderLineCollectionView: CollectionView = new CollectionView(this.listShopOrderLineObservableArray);
+  public listShopOrderLinePageIndex: number = 15;
+  @ViewChild('listShopOrderLineFlexGrid') listShopOrderLineFlexGrid: WjFlexGrid;
+
+  public saveShopOrderLineSubscription: any;
+  public deleteShopOrderLineSubscription: any;
+
+  public shopOrderLineModalTitle: string;
+
+  public isShopOrderLineActivityDateDisabled: boolean = false;
+  public trnShopOrderLineModel: TrnShopOrderLineModel = {
+    Id: 0,
+    SPId: 0,
+    ActivityDate: new Date(),
+    Activity: "",
+    User: ""
+  };
 
   // Create combo box item
   public createCboItem(): void {
@@ -178,6 +205,7 @@ export class TrnShopOrderDetailComponent implements OnInit {
           }
         }
 
+        this.listShopOrderLine();
         if (this.detailShopOrderSubscription != null) this.detailShopOrderSubscription.unsubscribe();
       }
     );
@@ -239,9 +267,193 @@ export class TrnShopOrderDetailComponent implements OnInit {
     );
   }
 
+  // Combo box for number of rows
+  public createCboShowNumberOfRows(): void {
+    for (var i = 0; i <= 4; i++) {
+      var rows = 0;
+      var rowsString = "";
+
+      if (i == 0) {
+        rows = 15;
+        rowsString = "Show 15";
+      } else if (i == 1) {
+        rows = 50;
+        rowsString = "Show 50";
+      } else if (i == 2) {
+        rows = 100;
+        rowsString = "Show 100";
+      } else if (i == 3) {
+        rows = 150;
+        rowsString = "Show 150";
+      } else {
+        rows = 200;
+        rowsString = "Show 200";
+      }
+
+      this.cboShowNumberOfRows.push({
+        rowNumber: rows,
+        rowString: rowsString
+      });
+    }
+  }
+
+  public cboShowNumberOfRowsOnSelectedIndexChanged(selectedValue: any): void {
+    this.listShopOrderLinePageIndex = selectedValue;
+
+    this.listShopOrderLineCollectionView.pageSize = this.listShopOrderLinePageIndex;
+    this.listShopOrderLineCollectionView.refresh();
+    this.listShopOrderLineCollectionView.refresh();
+  }
+
+  // List shop order line
+  public listShopOrderLine(): void {
+    this.listShopOrderLineObservableArray = new ObservableArray();
+    this.listShopOrderLineCollectionView = new CollectionView(this.listShopOrderLineObservableArray);
+    this.listShopOrderLineCollectionView.pageSize = 15;
+    this.listShopOrderLineCollectionView.trackChanges = true;
+    this.listShopOrderLineCollectionView.refresh();
+    this.listShopOrderLineFlexGrid.refresh();
+
+    let id: number = 0;
+    this.activatedRoute.params.subscribe(params => { id = params["id"]; });
+
+    this.trnShopOrderDetailService.listShopOrderLine(id.toString());
+    this.listShopOrderLineSubscription = this.trnShopOrderDetailService.listShopOrderLineObservable.subscribe(
+      data => {
+        if (data.length > 0) {
+          this.listShopOrderLineObservableArray = data;
+          this.listShopOrderLineCollectionView = new CollectionView(this.listShopOrderLineObservableArray);
+          this.listShopOrderLineCollectionView.pageSize = this.listShopOrderLinePageIndex;
+          this.listShopOrderLineCollectionView.trackChanges = true;
+          this.listShopOrderLineCollectionView.refresh();
+          this.listShopOrderLineFlexGrid.refresh();
+        }
+
+        if (this.listShopOrderLineSubscription != null) this.listShopOrderLineSubscription.unsubscribe();
+      }
+    );
+  }
+
+  // Open shop order line modal
+  public btnOpenShopOrderLineModalClick(shopOrderLineModalTemplate: TemplateRef<any>, isNew: Boolean): void {
+    this.shopOrderLineModalRef = this.modalService.show(shopOrderLineModalTemplate, { class: "modal-lg" });
+
+    let inpActivity: Element = document.getElementById("inpActivity");
+    this.isShopOrderLineActivityDateDisabled = false;
+    (<HTMLInputElement>inpActivity).disabled = false;
+
+    let btnSaveShopOrderLine: Element = document.getElementById("btnSaveShopOrderLine");
+    let btnCloseShopOrderLineModal: Element = document.getElementById("btnCloseShopOrderLineModal");
+    (<HTMLButtonElement>btnSaveShopOrderLine).disabled = false;
+    (<HTMLButtonElement>btnCloseShopOrderLineModal).disabled = false;
+
+    if (isNew) {
+      this.shopOrderLineModalTitle = "New Activity";
+
+      let SPId: number = 0;
+      this.activatedRoute.params.subscribe(params => { SPId = params["id"]; });
+
+      this.trnShopOrderLineModel.Id = 0;
+      this.trnShopOrderLineModel.SPId = SPId;
+      this.trnShopOrderLineModel.ActivityDate = new Date();
+      this.trnShopOrderLineModel.Activity = "";
+    } else {
+      this.shopOrderLineModalTitle = "Edit Activity";
+
+      let currentShopOrderLine = this.listShopOrderLineCollectionView.currentItem;
+      this.trnShopOrderLineModel.Id = currentShopOrderLine.Id;
+      this.trnShopOrderLineModel.SPId = currentShopOrderLine.SPId;
+      this.trnShopOrderLineModel.ActivityDate = new Date(currentShopOrderLine.ActivityDate);
+      this.trnShopOrderLineModel.Activity = currentShopOrderLine.Activity;
+    }
+  }
+
+  // Save shop order line modal
+  public btnSaveShopOrderLineClick() {
+    let inpActivity: Element = document.getElementById("inpActivity");
+    this.isShopOrderLineActivityDateDisabled = true;
+    (<HTMLInputElement>inpActivity).disabled = true;
+
+    let btnSaveShopOrderLine: Element = document.getElementById("btnSaveShopOrderLine");
+    let btnCloseShopOrderLineModal: Element = document.getElementById("btnCloseShopOrderLineModal");
+    (<HTMLButtonElement>btnSaveShopOrderLine).disabled = true;
+    (<HTMLButtonElement>btnCloseShopOrderLineModal).disabled = true;
+
+    if (this.trnShopOrderLineModel.Activity !== "") {
+      this.trnShopOrderDetailService.saveShopOrderLine(this.trnShopOrderLineModel);
+      this.saveShopOrderLineSubscription = this.trnShopOrderDetailService.saveShopOrderLineObservable.subscribe(
+        data => {
+          if (data[0] == "success") {
+            this.toastr.success("Shop order line was successfully saved.", "Success");
+
+            this.shopOrderLineModalRef.hide();
+            this.listShopOrderLine();
+          } else if (data[0] == "failed") {
+            this.toastr.error(data[1], "Error");
+
+            this.isShopOrderLineActivityDateDisabled = false;
+            (<HTMLInputElement>inpActivity).disabled = false;
+
+            (<HTMLButtonElement>btnSaveShopOrderLine).disabled = false;
+            (<HTMLButtonElement>btnCloseShopOrderLineModal).disabled = false;
+          }
+
+          if (this.saveShopOrderLineSubscription != null) this.saveShopOrderLineSubscription.unsubscribe();
+        }
+      );
+    } else {
+      this.toastr.error("Please don't leave empty fields.", "Error");
+
+      this.isShopOrderLineActivityDateDisabled = false;
+      (<HTMLInputElement>inpActivity).disabled = false;
+
+      (<HTMLButtonElement>btnSaveShopOrderLine).disabled = false;
+      (<HTMLButtonElement>btnCloseShopOrderLineModal).disabled = false;
+    }
+  }
+
+  // Delete shop order line modal
+  public btnDeleteShopOrderLineClick(shopOrderLineDeleteModalTemplate: TemplateRef<any>, isNew: Boolean): void {
+    this.shopOrderLineDeleteModalRef = this.modalService.show(shopOrderLineDeleteModalTemplate, { class: "modal-sm" });
+
+    let btnConfirmDeleteShopOrderLine: Element = document.getElementById("btnConfirmDeleteShopOrderLine");
+    let btnCloseConfirmDeleteShopOrderLineModal: Element = document.getElementById("btnCloseConfirmDeleteShopOrderLineModal");
+    (<HTMLButtonElement>btnConfirmDeleteShopOrderLine).disabled = false;
+    (<HTMLButtonElement>btnCloseConfirmDeleteShopOrderLineModal).disabled = false;
+  }
+
+  // Delete confirm shop order line modal
+  public btnConfirmDeleteShopOrderLineClick(): void {
+    let btnConfirmDeleteShopOrderLine: Element = document.getElementById("btnConfirmDeleteShopOrderLine");
+    let btnCloseConfirmDeleteShopOrderLineModal: Element = document.getElementById("btnCloseConfirmDeleteShopOrderLineModal");
+    (<HTMLButtonElement>btnConfirmDeleteShopOrderLine).disabled = true;
+    (<HTMLButtonElement>btnCloseConfirmDeleteShopOrderLineModal).disabled = true;
+
+    let currentShopOrderIne = this.listShopOrderLineCollectionView.currentItem;
+    this.trnShopOrderDetailService.deleteShopOrderLine(currentShopOrderIne.Id);
+    this.deleteShopOrderLineSubscription = this.trnShopOrderDetailService.deleteShopOrderLineObservable.subscribe(
+      data => {
+        if (data[0] == "success") {
+          this.toastr.success("Shop order was successfully deleted.", "Success");
+
+          this.shopOrderLineDeleteModalRef.hide();
+          this.listShopOrderLine();
+        } else if (data[0] == "failed") {
+          this.toastr.error(data[1], "Error");
+
+          (<HTMLButtonElement>btnConfirmDeleteShopOrderLine).disabled = false;
+          (<HTMLButtonElement>btnCloseConfirmDeleteShopOrderLineModal).disabled = false;
+        }
+
+        if (this.deleteShopOrderLineSubscription != null) this.deleteShopOrderLineSubscription.unsubscribe();
+      }
+    );
+  }
+
   // On page load
   ngOnInit() {
     this.createCboItem();
+    this.createCboShowNumberOfRows();
   }
 
   // On page destroy
@@ -252,5 +464,8 @@ export class TrnShopOrderDetailComponent implements OnInit {
     if (this.detailShopOrderSubscription != null) this.detailShopOrderSubscription.unsubscribe();
     if (this.lockShopOrderSubscription != null) this.lockShopOrderSubscription.unsubscribe();
     if (this.unlockShopOrderSubscription != null) this.unlockShopOrderSubscription.unsubscribe();
+    if (this.listShopOrderLineSubscription != null) this.listShopOrderLineSubscription.unsubscribe();
+    if (this.saveShopOrderLineSubscription != null) this.saveShopOrderLineSubscription.unsubscribe();
+    if (this.deleteShopOrderLineSubscription != null) this.deleteShopOrderLineSubscription.unsubscribe();
   }
 }

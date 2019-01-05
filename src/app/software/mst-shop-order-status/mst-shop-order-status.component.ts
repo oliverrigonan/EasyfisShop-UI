@@ -165,6 +165,9 @@ export class MstShopOrderStatusComponent implements OnInit {
           } else if (data[0] == "failed") {
             this.toastr.error(data[1], "Error");
 
+            (<HTMLInputElement>inpShopOrderStatusCode).disabled = false;
+            (<HTMLInputElement>inpShopOrderStatusName).disabled = false;
+
             (<HTMLButtonElement>btnSaveShopOrderStatus).disabled = false;
             (<HTMLButtonElement>btnCloseShopOrderStatusModal).disabled = false;
           }

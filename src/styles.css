@@ -34,3 +34,7 @@
 input[disabled] {
     cursor: not-allowed;
 }
+
+.toast {
+    box-shadow: none !important;
+}
