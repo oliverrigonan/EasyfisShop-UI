@@ -145,13 +145,13 @@ export class MstShopOrderStatusComponent implements OnInit {
     (<HTMLButtonElement>btnCloseShopOrderStatusModal).disabled = false;
 
     if (isNew) {
-      this.shopOrderStatusModalTitle = "New status";
+      this.shopOrderStatusModalTitle = "New Status";
 
       this.mstShopOrderStatus.Id = 0;
       this.mstShopOrderStatus.ShopOrderStatusCode = "";
       this.mstShopOrderStatus.ShopOrderStatus = "";
     } else {
-      this.shopOrderStatusModalTitle = "Edit status";
+      this.shopOrderStatusModalTitle = "Edit Status";
 
       let currentShopOrderStatus = this.listShopOrderStatusCollectionView.currentItem;
       this.mstShopOrderStatus.Id = currentShopOrderStatus.Id;
