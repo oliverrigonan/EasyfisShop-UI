@@ -21,26 +21,7 @@
                 [displayMemberPath]="'rowString'" [selectedValuePath]="'rowNumber'" (selectedIndexChanged)="cboShowNumberOfRowsOnSelectedIndexChanged(cboNumberOfRows.selectedValue)"
                 style="width: 140px;">
               </wj-combo-box>
-              &nbsp;
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <b>Start</b>
-                </div>
-              </div>
-              <wj-input-date #cboShopOrderStartDateFilter [(ngModel)]="shopOrderStartDateFilterData" [ngModelOptions]="{standalone: true}"
-                (textChanged)="startDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
-              </wj-input-date>
-              &nbsp;
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <b>End</b>
-                </div>
-              </div>
-              <wj-input-date #cboShopOrderEndDateFilter [(ngModel)]="shopOrderEndDateFilterData" [ngModelOptions]="{standalone: true}"
-                (textChanged)="endDateTextChanged()" format="MM-dd-yyyy" style="width: 150px;">
-              </wj-input-date>
             </div>
-
           </td>
           <td style="text-align: right;">
             <button class="btn btn-primary" [hidden]="isAddButtonHide" style="margin-right: 5px;" (click)="btnImportShopOrderClick()">
@@ -58,39 +39,47 @@
       </table>
     </div>
 
-    <!-- Header (Date Range) -->
-    <div class="card-header">
-      <table border="0" style="width: 100%; border: none;">
+    <!-- Flexgrid -->
+    <div class="card-body">
+      <table border="0" style="width: 100%; border: none; margin-top: -15px;">
         <tr>
           <td>
-            <div class="input-group">
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <b>Group</b>
-                </div>
-              </div>
+            <div class="form-group">
+              <small for="inpUsername">Start Date </small>
+              <wj-input-date #cboShopOrderStartDateFilter [(ngModel)]="shopOrderStartDateFilterData" [ngModelOptions]="{standalone: true}"
+                (textChanged)="startDateTextChanged()" format="MM-dd-yyyy" style="width: 100%;">
+              </wj-input-date>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <small for="inpUsername">End Date </small>
+              <wj-input-date #cboShopOrderEndDateFilter [(ngModel)]="shopOrderEndDateFilterData" [ngModelOptions]="{standalone: true}"
+                (textChanged)="endDateTextChanged()" format="MM-dd-yyyy" style="width: 100%;">
+              </wj-input-date>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <small for="inpUsername">Group </small>
               <wj-combo-box #cboShopGroup [itemsSource]="cboShopGroupObservableArray" [isEditable]="false" [isRequired]="true"
                 [displayMemberPath]="'ShopGroup'" [selectedValuePath]="'Id'" (selectedIndexChanged)="cboShopGroupSelectedIndexChanged()"
-                style="width: 227px;">
+                style="width: 100%;">
               </wj-combo-box>
-              &nbsp;
-              <div class="input-group-prepend">
-                <div class="input-group-text">
-                  <b>Status</b>
-                </div>
-              </div>
+            </div>
+          </td>
+          <td>
+            <div class="form-group">
+              <small for="inpUsername">Status </small>
               <wj-combo-box #cboShopOrderStatus [itemsSource]="cboShopOrderStatusObservableArray" [isEditable]="false"
                 [isRequired]="true" [displayMemberPath]="'ShopOrderStatus'" [selectedValuePath]="'Id'"
-                (selectedIndexChanged)="cboShopOrderStatusSelectedIndexChanged()" style="width: 227px;">
+                (selectedIndexChanged)="cboShopOrderStatusSelectedIndexChanged()" style="width: 100%;">
               </wj-combo-box>
             </div>
           </td>
         </tr>
       </table>
-    </div>
 
-    <!-- Flexgrid -->
-    <div class="card-body">
       <mat-progress-bar [hidden]="isProgressBarHidden" [color]="'primary'" [mode]="'indeterminate'"></mat-progress-bar>
       <wj-flex-grid #listShopOrderFlexGrid [itemsSource]="listShopOrderCollectionView" [selectionMode]="3"
         [frozenColumns]="2">
