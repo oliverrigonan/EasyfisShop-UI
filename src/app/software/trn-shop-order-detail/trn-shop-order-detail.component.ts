@@ -61,6 +61,7 @@ export class TrnShopOrderDetailComponent implements OnInit {
   public cboShopOrderStatusSubscription: any;
   public cboShopOrderStatusObservableArray: ObservableArray = new ObservableArray();
   public detailShopOrderSubscription: any;
+  public saveShopOrderSubscription: any;
   public lockShopOrderSubscription: any;
   public unlockShopOrderSubscription: any;
 
@@ -226,6 +227,29 @@ export class TrnShopOrderDetailComponent implements OnInit {
 
         this.listShopOrderLine();
         if (this.detailShopOrderSubscription != null) this.detailShopOrderSubscription.unsubscribe();
+      }
+    );
+  }
+
+  // Save shop order
+  public btnSaveShopOrderClick(): void {
+    let id: number = 0;
+    this.activatedRoute.params.subscribe(params => { id = params["id"]; });
+
+    let btnSaveShopOrder: Element = document.getElementById("btnSaveShopOrder");
+    (<HTMLButtonElement>btnSaveShopOrder).disabled = true;
+
+    this.trnShopOrderDetailService.saveShopGroup(this.trnShopOrderDetailModel);
+    this.saveShopOrderSubscription = this.trnShopOrderDetailService.saveShopOrderObservable.subscribe(
+      data => {
+        if (data[0] == "success") {
+          this.toastr.success("Shop order was successfully saved.", "Success");
+          (<HTMLButtonElement>btnSaveShopOrder).disabled = false;
+
+        } else if (data[0] == "failed") {
+          this.toastr.error(data[1], "Error");
+        }
+        if (this.saveShopOrderSubscription != null) this.saveShopOrderSubscription.unsubscribe();
       }
     );
   }
@@ -526,6 +550,7 @@ export class TrnShopOrderDetailComponent implements OnInit {
     if (this.cboShopGroupSubscription != null) this.cboShopGroupSubscription.unsubscribe();
     if (this.cboShopOrderStatusSubscription != null) this.cboShopOrderStatusSubscription.unsubscribe();
     if (this.detailShopOrderSubscription != null) this.detailShopOrderSubscription.unsubscribe();
+    if (this.saveShopOrderSubscription != null) this.saveShopOrderSubscription.unsubscribe();
     if (this.lockShopOrderSubscription != null) this.lockShopOrderSubscription.unsubscribe();
     if (this.unlockShopOrderSubscription != null) this.unlockShopOrderSubscription.unsubscribe();
     if (this.listShopOrderLineSubscription != null) this.listShopOrderLineSubscription.unsubscribe();

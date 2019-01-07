@@ -35,6 +35,8 @@ export class TrnShopOrderDetailService {
   public listShopOrderStatusObservable = this.listShopOrderStatusSource.asObservable();
   public detailShopOrderSource = new Subject<TrnShopOrderDetailModel>();
   public detailShopOrderObservable = this.detailShopOrderSource.asObservable();
+  public saveShopOrderSource = new Subject<string[]>();
+  public saveShopOrderObservable = this.saveShopOrderSource.asObservable();
   public lockShopOrderSource = new Subject<string[]>();
   public lockShopOrderObservable = this.lockShopOrderSource.asObservable();
   public unlockShopOrderSource = new Subject<string[]>();
@@ -171,6 +173,20 @@ export class TrnShopOrderDetailService {
         }
 
         this.detailShopOrderSource.next(trnShopOrderDetailModel);
+      }
+    );
+  }
+
+  // Save shop group
+  public saveShopGroup(objShopOrder: TrnShopOrderDetailModel): void {
+    this.httpClient.put(this.defaultAPIURLHost + "/api/shopOrder/save", JSON.stringify(objShopOrder), this.options).subscribe(
+      response => {
+        let responseResults: string[] = ["success", ""];
+        this.saveShopOrderSource.next(responseResults);
+      },
+      error => {
+        let errorResults: string[] = ["failed", error["error"]];
+        this.saveShopOrderSource.next(errorResults);
       }
     );
   }

@@ -7,6 +7,12 @@
     <div class="card-header">
       <table border="0" style="width: 100%; border: none;">
         <tr>
+          <td>
+            <button class="btn btn-primary" [hidden]="isSaveButtonHide" style="margin-right: 5px;" [disabled]="isLocked"
+              (click)="btnSaveShopOrderClick()" id="btnSaveShopOrder">
+              <fa name="save"></fa> Save
+            </button>
+          </td>
           <td style="text-align: right;">
             <button class="btn btn-primary" [hidden]="isLockButtonHide" style="margin-right: 5px;" [disabled]="isLocked"
               (click)="btnLockShopOrderClick()" id="btnLockShopOrder">
